@@ -1,0 +1,43 @@
+图片上传
+========
+接口:`pics/create`
+
+public中的userId必须传入
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>file</td>
+        <td>Stream</td>
+        <td>文件流</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+</table>
+######出参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>id</td>
+        <td>int</td>
+        <td>附件的id</td>
+        <td></td>
+        <td>No</td>
+        <td>通过附件的id和用户id,便可获取资源地址</td>
+    </tr>
+</table>

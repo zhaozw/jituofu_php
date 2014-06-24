@@ -1,0 +1,62 @@
+反馈问题模块
+========
+* [新建反馈](#新建反馈)
+
+####新建反馈
+接口:`feedback/create`
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>content</td>
+        <td>string</td>
+        <td>反馈内容</td>
+        <td></td>
+        <td>NO</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>pics</td>
+        <td>string</td>
+        <td>截图id集合</td>
+        <td>id,id,id</td>
+        <td>Yes</td>
+        <td>通过upload接口上传截图并获取资源id<br />多个截图的id,通过逗号分隔</td>
+    </tr>
+    <tr>
+        <td>author</td>
+        <td>string</td>
+        <td>反馈者</td>
+        <td>
+        </td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>email</td>
+        <td>string</td>
+        <td></td>
+        <td>
+        </td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>phone</td>
+        <td>string</td>
+        <td></td>
+        <td>
+        </td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+</table>
+######出参
+见公共参数

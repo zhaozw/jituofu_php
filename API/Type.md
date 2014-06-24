@@ -1,0 +1,561 @@
+商品分类模块
+========
+* [添加大分类](#添加大分类)
+* [添加小分类](#添加小分类)
+* [修改大分类名称](#修改大分类名称)
+* [修改小分类名称](#修改小分类名称)
+* [删除大分类](#删除大分类)
+* [删除小分类](#删除小分类)
+* [查询大分类](#查询大分类)
+* [查询小分类](#查询小分类)
+* [删除大分类及其下的小分类和所有商品](#删除大分类及其下的小分类和所有商品)
+* [删除大分类,并且移动其下的小分类到其它大分类](#删除大分类并且移动其下的小分类到其它大分类)
+* [删除小分类及其下所有的商品](#删除小分类及其下所有的商品)
+* [获取大分类详情](#大分类详情)
+
+####添加大分类
+接口:`types/create`
+
+public中的userId必须传入
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>name</td>
+        <td>String</td>
+        <td>大分类名称</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+</table>
+######出参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>参见公共参数</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+####添加小分类
+接口:`types/create`
+
+public中的userId必须传入
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>name</td>
+        <td>String</td>
+        <td>小分类名称</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>parent</td>
+        <td>int</td>
+        <td>父分类id</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+</table>
+######出参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>参见公共参数</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+
+####修改大分类名称
+接口:`types/update`
+
+public中的userId必须传入
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>name</td>
+        <td>String</td>
+        <td>大分类名称</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>id</td>
+        <td>int</td>
+        <td>大分类id</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+</table>
+######出参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>参见公共参数</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+
+####修改小分类名称
+接口:`types/update`
+
+public中的userId必须传入
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>name</td>
+        <td>String</td>
+        <td>小分类名称</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>id</td>
+        <td>int</td>
+        <td>小分类id</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>parent</td>
+        <td>int</td>
+        <td>大分类id</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+</table>
+######出参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>参见公共参数</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+
+####删除大分类
+接口:`types/delete`
+
+public中的userId必须传入
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>id</td>
+        <td>int</td>
+        <td>大分类id</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+</table>
+######出参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>参见公共参数</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+
+####删除小分类
+接口:`types/delete`
+
+public中的userId必须传入
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>parent</td>
+        <td>int</td>
+        <td>大分类id</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>id</td>
+        <td>int</td>
+        <td>小分类id</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+</table>
+######出参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>参见公共参数</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+
+####查询大分类
+接口:`types/index`或`types/`
+
+public中的userId必须传入
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>pageNum</td>
+        <td>int</td>
+        <td>页码</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>limit</td>
+        <td>int</td>
+        <td>每页显示的数据量</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+</table>
+######出参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>id</td>
+        <td></td>
+        <td>大分类id</td>
+        <td></td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>name</td>
+        <td></td>
+        <td>大分类名称</td>
+        <td></td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+</table>
+通过operation字段获取,如果没有数据,operation则为空
+
+####查询小分类
+接口:`types/index`或`types/`
+
+public中的userId必须传入
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>pageNum</td>
+        <td>int</td>
+        <td>页码</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>limit</td>
+        <td>int</td>
+        <td>每页显示的数据量</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>parent</td>
+        <td>int</td>
+        <td>大分类id</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+</table>
+######出参
+和[查询大分类](#查询大分类)的出参一样
+
+####删除大分类及其下的小分类和所有商品
+接口:`types/deletepcp`
+
+public中的userId和cookie必须传入
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>id</td>
+        <td>int</td>
+        <td>大分类id</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+</table>
+######出参
+见[公共参数](Public.md)
+
+该接口的响应时间可能会较长
+
+####删除大分类并且移动其下的小分类到其它大分类
+接口:`types/deletepmc`
+
+public中的userId和cookie必须传入
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>id</td>
+        <td>int</td>
+        <td>大分类id</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>to</td>
+        <td>int</td>
+        <td>目标大分类id</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+</table>
+######出参
+见[公共参数](Public.md)
+
+####删除小分类及其下所有的商品
+接口:`types/deletecp`
+
+public中的userId和cookie必须传入
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>id</td>
+        <td>int</td>
+        <td>小分类id</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>parent</td>
+        <td>int</td>
+        <td>大分类id</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+</table>
+######出参
+见[公共参数](Public.md)
+
+####大分类详情
+接口:`types/detailp`
+
+public中的userId必须传入
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>id</td>
+        <td>int</td>
+        <td>大分类id</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+</table>
+######出参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>child</td>
+        <td>int</td>
+        <td>当前大分类下的小分类个数</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>product</td>
+        <td>int</td>
+        <td>直属当前大分类的商品数量</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+</table>
+
