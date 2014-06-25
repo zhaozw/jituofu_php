@@ -11,6 +11,6 @@ else
 	$confType = 'prod';
 
 return CMap::mergeArray( require(dirname(__FILE__).'/'.$confType.'Config.php'), array(
-	'name'=>'小店记账宝',
+	'name'=>'记托付',
 	'defaultController'=>'Index'
 ));

@@ -16,7 +16,7 @@ return CMap::mergeArray( require(dirname(__FILE__).'/base.php'), array(
         ),
 		// uncomment the following to use a MySQL database
 		'db'=>array(
-            'connectionString' => 'mysql:host=127.0.0.1;dbname=xdjzb_dev_new',
+            'connectionString' => 'mysql:host=127.0.0.1;dbname=jituofu',
             'emulatePrepare' => true,
             'username' => 'root',
             'password' => 'ZHUqi@159',

@@ -8,5 +8,5 @@ define('appPath', dirname(__FILE__).DIRECTORY_SEPARATOR.'application'.DIRECTORY_
 $confType = 'dev';
 
 return CMap::mergeArray( require(dirname(__FILE__).'/'.$confType.'Config.php'), array(
-    'name'=>'小店记账宝',
+    'name'=>'记托付',
 ));

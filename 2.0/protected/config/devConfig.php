@@ -22,10 +22,10 @@ return CMap::mergeArray( require(dirname(__FILE__).'/base.php'), array(
         ),
 		// uncomment the following to use a MySQL database
 		'db'=>array(
-			'connectionString' => 'mysql:host=127.0.0.1;dbname=xdjzb_dev_new',
+			'connectionString' => 'mysql:host=127.0.0.1;dbname=jituofu',
 			'emulatePrepare' => true,
 			'username' => 'root',
-			'password' => 'ZHUqi@159',
+			'password' => '',
 			'charset' => 'utf8',
 			'tablePrefix' => '',
 		),
@@ -38,7 +38,7 @@ return CMap::mergeArray( require(dirname(__FILE__).'/base.php'), array(
 					'levels'=>'error, warning, info, trace',
 					'filter'=>'CLogFilter',
                     'categories'=> 'application.*',
-                    'logPath' => '/htdocs/xdjzb/protected/runtime/logs',
+                    'logPath' => 'C:\Users\zhuqi\git\jituofu_php\2.0\protected\runtime\logs',
                     'logFile' => 'application.log'
 				),
                 //debug日志
@@ -47,7 +47,7 @@ return CMap::mergeArray( require(dirname(__FILE__).'/base.php'), array(
                     'levels'=>'trace',
                     'filter'=>'CLogFilter',
                     'categories'=> 'debug.*',
-                    'logPath' => '/htdocs/xdjzb/protected/runtime/logs',
+                    'logPath' => 'C:\Users\zhuqi\git\jituofu_php\2.0\protected\runtime\logs',
                     'logFile' => 'debug.log'
                 ),
                 //发送邮件日志
@@ -56,7 +56,7 @@ return CMap::mergeArray( require(dirname(__FILE__).'/base.php'), array(
                     'levels'=>'trace, warning, info, error',
                     'filter'=>'CLogFilter',
                     'categories'=> 'mail.*',
-                    'logPath' => '/htdocs/xdjzb/protected/runtime/logs',
+                    'logPath' => 'C:\Users\zhuqi\git\jituofu_php\2.0\protected\runtime\logs',
                     'logFile' => 'mail.log'
                 ),
                 // show log in firebugs

@@ -7,7 +7,7 @@
  */
 class IndexController extends Controller{
 	public function actionIndex(){
-		echo "小店记账宝开工啦!";
+		echo Yii::app()->name;
 	}
 }
 ?>
