@@ -29,10 +29,7 @@ return array(
 			'showScriptName'=>false,
  			'urlSuffix'=>'',
 			'rules'=>array(
-				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
-				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
-				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
-				'<controller:\account>/<action:\w+>'=>'share/<action>',
+				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>'
 			),
 		),
 		'errorHandler'=>array(

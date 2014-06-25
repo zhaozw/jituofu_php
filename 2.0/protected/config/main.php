@@ -12,5 +12,5 @@ else
 
 return CMap::mergeArray( require(dirname(__FILE__).'/'.$confType.'Config.php'), array(
 	'name'=>'记托付',
-	'defaultController'=>'Index'
+	'defaultController'=>'Users'
 ));
