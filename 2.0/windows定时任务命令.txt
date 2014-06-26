@@ -1,0 +1,1 @@
+C:\xampp\php\php C:\Users\zhuqi\git\jituofu_php\2.0\protected\commands\crons.php Mail send
