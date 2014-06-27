@@ -11,6 +11,7 @@
 * [删除大分类及其下的小分类和所有商品](#删除大分类及其下的小分类和所有商品)
 * [删除大分类,并且移动其下的小分类到其它大分类](#删除大分类并且移动其下的小分类到其它大分类)
 * [删除小分类及其下所有的商品](#删除小分类及其下所有的商品)
+* [删除小分类并移动其下所有的商品到其它小分类](#删除小分类并移动其下所有的商品到其它小分类)
 * [获取大分类详情](#大分类详情)
 
 ####添加大分类
@@ -368,7 +369,7 @@ public中的userId必须传入
         <td></td>
     </tr>
 </table>
-通过operation字段获取,如果没有数据,operation则为空
+通过operation里的types字段获取,如果没有数据,operation中的types则为空数组
 
 ####查询小分类
 接口:`types/index`或`types/`
@@ -507,6 +508,49 @@ public中的userId和cookie必须传入
 </table>
 ######出参
 见[公共参数](Public.md)
+
+####删除小分类并移动其下所有的商品到其它小分类
+接口:`types/deletemp`
+
+public中的userId和cookie必须传入
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>id</td>
+        <td>int</td>
+        <td>小分类id</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>parent</td>
+        <td>int</td>
+        <td>大分类id</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>targetId</td>
+        <td>int</td>
+        <td>目标小分类id</td>
+        <td></td>
+        <td>No</td>
+        <td>请注意: 目前仅能够在当前大分类下移动,暂不支持跨大分类移动</td>
+    </tr>
+</table>
+######出参
+见[公共参数](Public.md)
+
 
 ####大分类详情
 接口:`types/detailp`

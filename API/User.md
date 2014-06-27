@@ -725,7 +725,7 @@ public中的userId必须传入
     </tr>
     <tr>
         <td>step</td>
-        <td>String</td>
+        <td>Int</td>
         <td>找回密码第几步</td>
         <td>2表示第二步,目前只有2步</td>
         <td>NO</td>

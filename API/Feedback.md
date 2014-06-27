@@ -23,12 +23,12 @@
         <td></td>
     </tr>
     <tr>
-        <td>pics</td>
-        <td>string</td>
-        <td>截图id集合</td>
-        <td>id,id,id</td>
+        <td>file(x)</td>
+        <td>Stream</td>
+        <td>文件流</td>
+        <td>file1, file2,file3</td>
         <td>Yes</td>
-        <td>通过upload接口上传截图并获取资源id<br />多个截图的id,通过逗号分隔</td>
+        <td>截图文件流,最多允许3个文件,文件流的key以file加序号构成,如file1,file2,file3</td>
     </tr>
     <tr>
         <td>author</td>
