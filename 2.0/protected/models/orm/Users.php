@@ -162,10 +162,12 @@ class Users extends CActiveRecord
         $records = Device::model()->findAllByAttributes(array('user_id' => $userId));
 
         if (!empty($records)) {
-            foreach($records as $k => $record){
-                $record->delete();
+            $deletedRows = Device::model()->deleteAllByAttributes(array('user_id' => $userId));
+            if($deletedRows == count($records)){
+                return true;
+            }else{
+                return false;
             }
-            return true;
         }else{
             return false;
         }

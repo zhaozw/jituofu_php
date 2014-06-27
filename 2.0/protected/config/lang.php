@@ -28,7 +28,7 @@ return array(
 
     //找回密码相关
     "FORGOT_PASS_ERROR"		=> "找回密码失败",
-    "FORGOT_PASS_NEW_PASS_EMAIL_SUCCESS"		=> "登录密码设置成功",
+    "FORGOT_PASS_NEW_PASS_EMAIL_SUCCESS"		=> "登录密码设置成功，请重新登录",
     "FORGOT_PASS_NEW_PASS_EMAIL_ERROR" => "登录密码设置失败",
     "FORGOT_PASS_REQUEST_SUCCESS"		=> "校验码已经发送到您的邮箱，请按照邮件里的步骤重新设置登录密码",
 
@@ -67,6 +67,7 @@ return array(
     "MEMO_SIGN_INVALID" => "签名验证失败",
     "MEMO_USER_VERIFY_ERROR" => "用户验证失败",
     "MEMO_NO_LOGIN" => "当前用户未登录",
+    "MEMO_NO_DIR" => "目录为空",
 
     //商品分类
     "TYPE_NAME_CHAR_LIMIT" => "分类名称必须是 %m1% 到 %m2% 位中英文或数字",

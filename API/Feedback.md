@@ -31,6 +31,15 @@
         <td>截图文件流,最多允许3个文件,文件流的key以file加序号构成,如file1,file2,file3</td>
     </tr>
     <tr>
+        <td>dir</td>
+        <td>string</td>
+        <td>目录名</td>
+        <td>
+        </td>
+        <td>Yes</td>
+        <td>如果上传截图文件，必须要提供dir参数</td>
+    </tr>
+    <tr>
         <td>author</td>
         <td>string</td>
         <td>反馈者</td>

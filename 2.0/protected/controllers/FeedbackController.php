@@ -82,6 +82,9 @@ class FeedbackController extends Controller
             $filesId = array();
             if(count($_FILES) > 0){
                 $dir = @F::trimAll($operation['dir']);
+                if(!$dir){
+                    return F::returnError(F::lang("MEMO_NO_DIR"));
+                }
                 foreach($_FILES as $k => $file){
                     $f = @CUploadedFile::getInstanceByName($k);
                     if($f){

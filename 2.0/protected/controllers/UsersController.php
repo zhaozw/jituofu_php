@@ -216,10 +216,10 @@ class UsersController extends Controller
             $operation = F::getOperationData();
             $public = F::getPublicData();
 
-            $userId = F::trimAll($public['userId']);
-            $password = F::trimAll($operation['password']);
-            $cpassword = F::trimAll($operation['cpassword']);
-            $token = F::trimAll($operation['token']);
+            $userId = @F::trimAll($public['userId']);
+            $password = @F::trimAll($operation['password']);
+            $cpassword = @F::trimAll($operation['cpassword']);
+            $token = @F::trimAll($operation['token']);
 
             if(!$userId){
                 F::returnError(F::lang('MEMO_NO_USERID'));
@@ -279,8 +279,8 @@ class UsersController extends Controller
             $public = F::getPublicData();
             $operation = F::getOperationData();
 
-            $userId = $public['userId'];
-            $cookie = $public['cookie'];
+            $userId = @$public['userId'];
+            $cookie = @$public['cookie'];
             $uuid = @$operation['clientId'];
 
             if(!$uuid){
