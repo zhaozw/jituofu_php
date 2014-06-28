@@ -150,6 +150,8 @@ return array(
 
     //反馈
     "FEEDBACK_CONTENT_SPECIFY" => "请指定反馈内容",
+    "FEEDBACK_SUBMIT_SUCCESS" => "感谢您的反馈，我们会及时处理",
+    "FEEDBACK_SUBMIT_ERROR" => "提交反馈失败，请重试",
 
     //通用
     "COMMON_QUERY_SUCCESS" => "查询成功",

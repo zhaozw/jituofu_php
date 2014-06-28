@@ -139,10 +139,10 @@ class FeedbackController extends Controller
             );
 
             if($model->save()){
-                return F::returnSuccess(F::lang('COMMON_CZ_SUCCESS'));
+                return F::returnSuccess(F::lang('FEEDBACK_SUBMIT_SUCCESS'));
             }else{
                 F::error("反馈内容入库失败 ".CJSON::encode($model->getErrors()));
-                return F::returnError(F::lang('COMMON_CZ_ERROR'));
+                return F::returnError(F::lang('FEEDBACK_SUBMIT_ERROR'));
             }
         }
 	}
