@@ -265,7 +265,7 @@ class TypesController extends Controller
             $public = F::getPublicData();
             $operation = F::getOperationData();
 
-            $id = $operation['id'];
+            $id = @$operation['id'];
 
             if(!$id){
                 F::returnError(F::lang(('TYPE_ID_SPECIFY')));
@@ -276,11 +276,11 @@ class TypesController extends Controller
             $record = Types::model()->findByAttributes(array('id'=>$id, 'user_id' => $public['userId'], 'parent_id'=>null));
 
             if(!$record){
-                F::returnError(F::lang('TYPE_NO_EXIST'));
+                F::returnError(F::lang('TYPE_NO_EXIST_PARENT'));
             }
 
-            //大分类和小分类的ID存储
-            //在这里,传给Products::deleteByTypeID
+            //大分类和小分类的ID存储器
+            //传给Products::deleteByTypeID
             $typeIds = array("parent" => array($id), "child" => array());
 
             $typeIsDeleted = false;
@@ -307,7 +307,12 @@ class TypesController extends Controller
                             F::returnSuccess(F::lang('TYPE_PARENT_CHILD_DELETE_SUCCESS'));
                         }
                     }else{
-                        F::returnError(F::lang('TYPE_PARENT_DELETE_ERROR'));
+                        //根据分类id,删除商品
+                        if(Products::deleteByTypeID($typeIds)){
+                            F::returnSuccess(F::lang('TYPE_PARENT_DELETE_PRODUCTS_SUCCESS'));
+                        }else{
+                            F::returnError(F::lang('TYPE_PARENT_DELETE_SUCCESS'));
+                        }
                     }
                 }else{
                     //根据分类id,删除商品
