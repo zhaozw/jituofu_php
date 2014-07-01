@@ -307,13 +307,18 @@ class TypesController extends Controller
                             F::returnSuccess(F::lang('TYPE_PARENT_CHILD_DELETE_SUCCESS'));
                         }
                     }else{
-                        F::returnError(F::lang('TYPE_DELETE_ERROR'));
+                        F::returnError(F::lang('TYPE_PARENT_DELETE_ERROR'));
                     }
                 }else{
-                    F::returnSuccess(F::lang('TYPE_DELETE_SUCCESS'));
+                    //根据分类id,删除商品
+                    if(Products::deleteByTypeID($typeIds)){
+                        F::returnSuccess(F::lang('TYPE_PARENT_DELETE_PRODUCTS_SUCCESS'));
+                    }else{
+                        F::returnSuccess(F::lang('TYPE_PARENT_DELETE_SUCCESS'));
+                    }
                 }
             }else{
-                F::returnError(F::lang('TYPE_DELETE_ERROR'));
+                F::returnError(F::lang('TYPE_PARENT_DELETE_ERROR'));
             }
         }
     }
@@ -436,6 +441,10 @@ class TypesController extends Controller
                 F::returnError(F::lang(('TYPE_TO_SPECIFY')));
             }else if(!is_numeric($to)){
                 F::returnError(F::lang('TYPE_NO_EXIST'));
+            }
+
+            if($id == $to){
+                F::returnError(F::lang(('TYPE_PARENT_EQUAL_TARGET')));
             }
 
             //查询当前分类是否存在
