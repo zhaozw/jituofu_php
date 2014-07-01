@@ -417,7 +417,7 @@ class TypesController extends Controller
     }
 
     /**
-     * 删除大分类,并且移动其下的小分类到其它大分类
+     * 删除大分类,并且移动其下的小分类及所有商品到其它大分类
      */
     public function actionDeletepmc(){
         if(F::loggedCommonVerify(true)){
@@ -460,14 +460,29 @@ class TypesController extends Controller
                 $criteria->addInCondition('user_id', array($public['userId']));
                 $childRecords = Types::model()->findAll($criteria);
 
+                //查询当前分类下的商品
+                $pcriteria = new CDbCriteria;
+                $pcriteria->addInCondition('type', array($id));
+                $pcriteria->addInCondition('status', array(1));
+                $pcriteria->addInCondition('user_id', array($public['userId']));
+                $productRecords = Products::model()->findAll($pcriteria);
+
                 if (!empty($childRecords)) {
                     if(Types::model()->updateAll(array('parent_id' => $to), $criteria) === count($childRecords)){
-                        F::returnSuccess(F::lang('TYPE_PARENT_CHILD_MOVE_SUCCESS'));
+                        if(count($productRecords) > 0 && (Products::model()->updateAll(array('type' => $to), $pcriteria) === count($productRecords))){
+                            F::returnSuccess(F::lang('TYPE_PARENT_CHILD_PRODUCTS_MOVE_SUCCESS'));
+                        }else{
+                            F::returnSuccess(F::lang('TYPE_PARENT_CHILD_MOVE_SUCCESS'));
+                        }
                     }else{
                         F::returnError(F::lang('TYPE_CHILD_MOVE_ERROR'));
                     }
                 }else{
-                    F::returnSuccess(F::lang('TYPE_DELETE_SUCCESS'));
+                    if(count($productRecords) > 0 && (Products::model()->updateAll(array('type' => $to), $pcriteria) === count($productRecords))){
+                        F::returnSuccess(F::lang('TYPE_PARENT_PRODUCTS_MOVE_SUCCESS'));
+                    }else{
+                        F::returnSuccess(F::lang('TYPE_PARENT_DELETE_SUCCESS'));
+                    }
                 }
             }else{
                 F::returnError(F::lang('TYPE_DELETE_ERROR'));

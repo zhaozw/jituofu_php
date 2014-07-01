@@ -95,7 +95,10 @@ return array(
     "TYPE_TO_SPECIFY" => "请指定小分类要移动的位置",
     "TYPE_CHILD_MOVE_ERROR" => "移动小分类失败",
     "TYPE_TARGETPARENT_NO_EXIST" => "要移动到的大分类不存在",
-    "TYPE_PARENT_CHILD_MOVE_SUCCESS" => "大分类删除,小分类移动成功",
+    "TYPE_PARENT_CHILD_MOVE_SUCCESS" => "大分类已删除,小分类移动成功",
+    "TYPE_PARENT_CHILD_PRODUCTS_MOVE_SUCCESS" => "大分类已删除,小分类和所有商品移动成功",
+    "TYPE_PARENT_PRODUCTS_MOVE_SUCCESS" => "大分类已删除,所有商品移动成功",
+    "TYPE_PARENT_DELETE_SUCCESS" => "大分类已删除",
     "TYPE_PARENT_DETAIL_SUCCESS" => "大分类详情查询成功",
 
     //商品
