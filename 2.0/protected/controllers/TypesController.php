@@ -174,7 +174,7 @@ class TypesController extends Controller
                     F::returnError(F::lang('TYPE_PARENT_FORMAT_ERROR'));
                 }
 
-                $nameIsExist = Types::model()->findByAttributes(array('id'=>$id, 'user_id' => $public['userId'], 'parent_id' => $parent, 'name' => F::trimAll($name)));
+                $nameIsExist = Types::model()->findByAttributes(array('user_id' => $public['userId'], 'parent_id' => $parent, 'name' => F::trimAll($name)));
 
                 if($nameIsExist){
                     return F::returnError(F::lang("TYPE_NAME__IN_USE"));
@@ -183,7 +183,7 @@ class TypesController extends Controller
                 $record = Types::model()->findByAttributes(array('id'=>$id, 'user_id' => $public['userId'], 'parent_id' => $parent));
             }else{
 
-                $nameIsExist = Types::model()->findByAttributes(array('id'=>$id, 'user_id' => $public['userId'], 'parent_id' => null, 'name' => F::trimAll($name)));
+                $nameIsExist = Types::model()->findByAttributes(array('user_id' => $public['userId'], 'parent_id' => null, 'name' => F::trimAll($name)));
 
                 if($nameIsExist){
                     return F::returnError(F::lang("TYPE_NAME__IN_USE"));
