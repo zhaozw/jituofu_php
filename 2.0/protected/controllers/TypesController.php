@@ -205,7 +205,7 @@ class TypesController extends Controller
             );
 
             $this->performAjaxValidation($model);
-            if($model->save(true, array('name'))){
+            if($model->save(true, array('name', 'time'))){
                 F::returnSuccess(F::lang('TYPE_UPDATE_SUCCESS'), array("id" => $id, "name" => F::trimAll($name), "parent" => $model->getAttribute("parent_id")));
             }else{
                 F::returnError(F::lang('TYPE_UPDATE_ERROR'), $model->getErrors());
