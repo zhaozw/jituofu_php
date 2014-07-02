@@ -365,10 +365,10 @@ class TypesController extends Controller
                 if(Products::deleteByTypeID(array("child" => array($id), "parent"=>array()))){
                     F::returnSuccess(F::lang('TYPE_CHILD_DELETE_PRODUCTS_SUCCESS'));
                 }else{
-                    F::returnSuccess(F::lang('TYPE_DELETE_SUCCESS'));
+                    F::returnSuccess(F::lang('TYPE_CHILD_DELETE_SUCCESS'));
                 }
             }else{
-                F::returnError(F::lang('TYPE_DELETE_ERROR'));
+                F::returnError(F::lang('TYPE_CHILD_DELETE_ERROR'));
             }
         }
     }
