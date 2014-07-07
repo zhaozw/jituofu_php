@@ -541,4 +541,12 @@ For example:
         </pre>
         </td>
     </tr>
+    <tr>
+        <td>remark</td>
+        <td>String</td>
+        <td>商品描述</td>
+        <td></td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
 </table>
