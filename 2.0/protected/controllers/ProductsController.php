@@ -157,10 +157,35 @@ class ProductsController extends Controller
                 F::returnError(F::lang('PRODUCT_NO_EXIST'));
             }
 
+            //可能没有修改
+            if(
+            (count($_FILES) <= 0)
+            &&
+            ($product->getAttribute("name") == F::trimAll($name))
+            &&
+            ($product->getAttribute("count") == F::trimAll($count))
+            &&
+            ($product->getAttribute("price") == F::trimAll($price))
+            &&
+            ($product->getAttribute("type") == F::trimAll($type))
+            &&
+            (F::trimAll($product->getAttribute("date")) == F::trimAll($date))//去除日期数据中的空格
+            &&
+            ($product->getAttribute("remark") == F::trimAll($remark))
+            ){
+                return F::returnError(F::lang("PRODUCT_NO_UPDATE"));
+            }
+
             //分类不存在
             $typeName = Types::getTypeNameById($type);
             if (!$typeName) {
                 return F::returnError(F::lang('PRODUCT_UPDATE_ERROR') . ' ' . F::lang('TYPE_NO_EXIST'));
+            }
+
+            //商品名称重复
+            $existProduct = Products::isExistByName(F::trimAll($name), $type);
+            if ($existProduct && $existProduct->getAttribute("id") != $id) {
+                F::returnError(F::lang('PRODUCT_NAME_IN_USE'));
             }
 
             //如果有图片上传
