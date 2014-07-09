@@ -27,7 +27,7 @@ class ProductsController extends Controller
     {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view', 'create', 'update', 'delete', 'query'),
+                'actions' => array('index', 'view', 'create', 'update', 'delete', 'query', 'search'),
                 'users' => array('*'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -49,6 +49,98 @@ class ProductsController extends Controller
         $this->render('view', array(
             'model' => $this->loadModel($id),
         ));
+    }
+
+    public function actionSearch(){
+        if (F::loggedCommonVerify()) {
+            $public = F::getPublicData();
+            $operation = F::getOperationData();
+
+            $keyword = @$operation['keyword'];
+            $pageNum = @$operation['pageNum'];
+            $limit = @$operation['limit'];
+            $userId = $public['userId'];
+            $sort = @$operation['sort'];
+
+            if(!$keyword){
+                return F::returnError(F::lang("PRODUCT_KEYWORD_SPECIFY"));
+            }
+
+            if(!$pageNum){
+                $pageNum = 1;
+            }
+            if(!$limit){
+                $limit = 10;
+            }
+            if(!$sort){
+                $sort = 1;
+            }
+
+            $pageNum = $pageNum - 1;
+
+            $criteria = new CDbCriteria;
+            $criteria->addCondition('user_id=' . $userId);
+            $criteria->addCondition('status=1');
+            $criteria->addCondition("name like :name");
+            $criteria->params = array(":name"=>"%".$keyword."%");
+
+            $count = Products::model()->count($criteria);
+
+            $pages = new CPagination($count);
+            $pages->setPageSize($limit);
+            $pages->setCurrentPage($pageNum);
+            $pages->applyLimit($criteria);
+
+            $csort = new CSort;
+
+            if ($sort == 1) {
+                //date倒序
+                $csort->defaultOrder = 'date DESC';
+            } else if ($sort == 2) {
+                //date升序
+                $csort->defaultOrder = 'date ASC';
+            } else if ($sort == 3) {
+                //price倒序
+                $csort->defaultOrder = 'price DESC';
+            } else if ($sort == 4) {
+                //price升序
+                $csort->defaultOrder = 'price ASC';
+            }
+
+            $result = Products::model()->findAll($criteria);
+            $dataProvider = new CArrayDataProvider(
+                $result,
+                array(
+                    'sort' => $csort,
+                    'pagination' => $pages
+                )
+            );
+            $records = array();
+
+            $lastPage = $count / $limit;
+            if (is_float($lastPage)) {
+                $lastPage = $lastPage + 1;
+            }
+            if (($pageNum + 1) > $lastPage) {
+                F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), $records);
+                return;
+            }
+
+            foreach ($dataProvider->getData() as $k => $record) {
+                array_push($records, array(
+                    'id' => $record->id,
+                    'name' => $record->name,
+                    'count' => $record->count,
+                    'price' => $record->price,
+                    'pic' => Files::getImg($record->pic),
+                    'date' => $record->date,
+                    'type' => Types::getTypeNameById($record->type),
+                    'remark' => $record->remark
+                ));
+            }
+
+            F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), $records);
+        }
     }
 
     /**
@@ -264,7 +356,7 @@ class ProductsController extends Controller
             $public = F::getPublicData();
             $operation = F::getOperationData();
 
-            $id = $operation['id'];
+            $id = @$operation['id'];
 
             if (!$id) {
                 F::returnError(F::lang('PRODUCT_ID_SPECIFY'));

@@ -124,6 +124,7 @@ return array(
     "PRODUCT_DELETED_SUCCESS" => "商品删除成功",
     "PRODUCT_DELETED_ERROR" => "商品删除失败",
     "PRODUCT_NO_UPDATE" => "商品信息没有改变",
+    "PRODUCT_KEYWORD_SPECIFY" => "请提供搜索商品的关键字",
 
     //上传图片
     "UPLOAD_MAX_FILE_SIZE" => "文件超过10兆",
