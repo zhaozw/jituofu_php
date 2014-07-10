@@ -122,7 +122,7 @@ class ProductsController extends Controller
                 $lastPage = $lastPage + 1;
             }
             if (($pageNum + 1) > $lastPage) {
-                F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), $records);
+                F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("productsList"=>$records));
                 return;
             }
 
@@ -139,7 +139,7 @@ class ProductsController extends Controller
                 ));
             }
 
-            F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), $records);
+            F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("productsList"=>$records));
         }
     }
 
