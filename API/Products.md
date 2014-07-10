@@ -66,7 +66,7 @@
     </tr>
 </table>
 ######出参
-见[公共参数](Public.md)
+通过`operation中的productsList`获取搜索结果。详见[公共参数](Public.md)
 
 ####添加商品
 接口:`products/create`
