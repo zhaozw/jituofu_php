@@ -134,8 +134,8 @@ class ProductsController extends Controller
                     'price' => $record->price,
                     'pic' => Files::getImg($record->pic),
                     'date' => $record->date,
-                    'type' => Types::getTypeNameById($record->type),
-                    'remark' => $record->remark
+                    //'type' => Types::getTypeNameById($record->type),
+                    //'remark' => $record->remark
                 ));
             }
 
@@ -482,6 +482,13 @@ class ProductsController extends Controller
             $record = Products::isExistById(F::trimAll($pid));
             if (!$record) {
                 F::returnError(F::lang('PRODUCT_NO_EXIST'));
+            }
+
+            $typename = Types::getTypeNameById($record->getAttribute("type"));
+
+            //该商品所属的分类不存在
+            if(!$typename){
+                return F::returnError(F::lang('PRODUCT_STATUS_EXCEPTION'));
             }
 
             $result = array(
