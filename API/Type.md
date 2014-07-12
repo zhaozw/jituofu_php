@@ -553,7 +553,7 @@ public中的userId和cookie必须传入
 
 
 ####大分类详情
-接口:`types/detailp`
+接口:`types/queryparentdetail`
 
 public中的userId必须传入
 ######入参
@@ -574,6 +574,22 @@ public中的userId必须传入
         <td>No</td>
         <td></td>
     </tr>
+    <tr>
+        <td>pageNum</td>
+        <td>int</td>
+        <td>页码</td>
+        <td></td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>limit</td>
+        <td>int</td>
+        <td>每页显示的数据量</td>
+        <td></td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
 </table>
 ######出参
 <table>
@@ -586,20 +602,42 @@ public中的userId必须传入
         <td>其它</td>
     </tr>
     <tr>
-        <td>child</td>
+        <td>types</td>
         <td>int</td>
         <td>当前大分类下的小分类个数</td>
         <td></td>
-        <td>No</td>
+        <td>Yes</td>
         <td></td>
     </tr>
     <tr>
-        <td>product</td>
+        <td>products</td>
         <td>int</td>
         <td>直属当前大分类的商品数量</td>
         <td></td>
-        <td>No</td>
+        <td>Yes</td>
         <td></td>
     </tr>
 </table>
+
+**请注意：**如果当前大分类下有小分类，并且也有直属它的商品，则返回相关的数量
+
+```javascript
+{"types":10, "products": 100}
+```
+
+如果当前大分类下有小分类，但没有直属它的商品，则返回小分类列表
+
+```javascript
+{"types": [{},{}]}
+```
+
+如果当前大分类下没有小分类，但有直属它的商品，则返回商品列表
+
+```javascript
+{"products": [{},{}]}
+```
+
+因此后2种情况等于说直接查询数据列表，如果是后2种情况，建议接下来的请求传入`pageNum`和`limit`
+
+**目前这个接口有些怪异，后期改造**
 

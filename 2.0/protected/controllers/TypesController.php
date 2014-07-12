@@ -27,11 +27,11 @@ class TypesController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view', 'detailp'),
+				'actions'=>array('index','view'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update', 'delete', 'deletepcp', 'deletepmc', 'deletecp', 'deletemp'),
+				'actions'=>array('create','update', 'delete', 'deletepcp', 'deletepmc', 'deletecp', 'deletemp', 'queryparentdetail'),
 				'users'=>array('*'),
                 'verbs' => array('post', 'get')
 			),
@@ -504,46 +504,6 @@ class TypesController extends Controller
         }
     }
 
-    /**
-     * 查询大分类详情
-     */
-    public function actionDetailp(){
-        if(F::loggedCommonVerify()){
-            $public = F::getPublicData();
-            $operation = F::getOperationData();
-
-            $id = $operation['id'];
-
-            if(!$id){
-                F::returnError(F::lang(('TYPE_ID_SPECIFY')));
-            }else if(!is_numeric($id)){
-                F::returnError(F::lang('TYPE_NO_EXIST'));
-            }
-
-            //查询当前分类是否存在
-            $record = Types::model()->findByAttributes(array('id'=>$id, 'user_id' => $public['userId'], 'parent_id'=>null));
-            if(!$record){
-                F::returnError(F::lang('TYPE_NO_EXIST'));
-            }
-
-            $criteria = new CDbCriteria;
-            $criteria->addInCondition('parent_id', array($id));
-            $criteria->addInCondition('user_id', array($public['userId']));
-            $childRecords = Types::model()->findAll($criteria);
-
-            $pcriteria = new CDbCriteria;
-            $pcriteria->addInCondition('type', array($id));
-            $pcriteria->addInCondition('status', array(1));
-            $pcriteria->addInCondition('user_id', array($public['userId']));
-            $productRecords = Products::model()->findAll($pcriteria);
-
-            F::returnSuccess(F::lang('TYPE_PARENT_DETAIL_SUCCESS'), array(
-                "child" => count($childRecords),
-                "product" => count($productRecords)
-            ));
-        }
-    }
-
 	/**
 	 * Lists all models.
 	 */
@@ -605,6 +565,116 @@ class TypesController extends Controller
             F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("types" => $records));
         }
 	}
+
+    public function actionQueryParentDetail()
+    {
+        if(F::loggedCommonVerify()){
+            $public = F::getPublicData();
+            $operation = F::getOperationData();
+
+            $pageNum = @$operation['pageNum'];
+            $limit = @$operation['limit'];
+            $sort = @$operation['sort'];
+            $userId = $public['userId'];
+            $id = $operation['id'];
+
+            if(!$pageNum){
+                $pageNum = 1;
+            }
+            if(!$limit){
+                $limit = 10;
+            }
+            if(!$sort){
+                $sort = 1;
+            }
+
+            $pageNum = $pageNum-1;
+
+            //查询分类的条件
+            $ccriteria=new CDbCriteria;
+            $ccriteria->addCondition('user_id='.$userId);
+            $ccriteria->order = "time DESC";
+            $ccriteria->addCondition('status=1');
+            $ccriteria->addCondition("parent_id=$id");
+
+            $cresult = Types::model()->findAll($ccriteria);
+            $ccount = count($cresult);
+
+            //查询商品的条件
+            $pcriteria=new CDbCriteria;
+            $pcriteria->addCondition('user_id='.$userId);
+            $pcriteria->addCondition('status=1');
+            $pcriteria->order = "date DESC";
+            $pcriteria->addCondition("type=$id");
+
+            $presult = Products::model()->findAll($pcriteria);
+            $pcount = count($presult);
+
+            if($ccount > 0 && $pcount > 0){
+                return F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("types" => $ccount, "products" => $pcount));
+            }else if($ccount > 0){
+                $cpages = new CPagination($ccount);
+                $cpages->setPageSize($limit);
+                $cpages->setCurrentPage($pageNum);
+                $cpages->applyLimit($ccriteria);
+                $cdataProvider = new CArrayDataProvider(
+                    $cresult,
+                    array(
+                        'pagination' => $cpages
+                    )
+                );
+                $crecords = array();
+
+                $clastPage = $ccount/$limit;
+                if(is_float($clastPage)){
+                    $clastPage = $clastPage+1;
+                }
+                if(($pageNum+1)>$clastPage){
+                    F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("types" => $crecords));
+                    return;
+                }
+
+                foreach($cdataProvider->getData() as $k => $record){
+                    array_push($crecords, array(
+                        'id' => $record->id,
+                        'name' => $record->name
+                    ));
+                }
+
+                F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("types" => $crecords));
+            }else if($pcount > 0){
+                $ppages = new CPagination($pcount);
+                $ppages->setPageSize($limit);
+                $ppages->setCurrentPage($pageNum);
+                $ppages->applyLimit($pcriteria);
+                $pdataProvider = new CArrayDataProvider(
+                    $presult,
+                    array(
+                        'pagination' => $ppages
+                    )
+                );
+                $precords = array();
+
+                $plastPage = $pcount/$limit;
+                if(is_float($plastPage)){
+                    $plastPage = $plastPage+1;
+                }
+                if(($pageNum+1)>$plastPage){
+                    F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("products" => $precords));
+                    return;
+                }
+
+                foreach($pdataProvider->getData() as $k => $record){
+                    array_push($precords, array(
+                        'id' => $record->id,
+                        'name' => $record->name
+                    ));
+                }
+
+                F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("products" => $precords));
+            }
+        }
+    }
 
 	/**
 	 * Manages all models.
