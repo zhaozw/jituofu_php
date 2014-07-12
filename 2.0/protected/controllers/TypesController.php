@@ -672,6 +672,8 @@ class TypesController extends Controller
                 }
 
                 F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("products" => $precords));
+            }else{
+                return F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("types" => 0, "products" => 0));
             }
         }
     }
