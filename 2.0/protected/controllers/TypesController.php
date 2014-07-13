@@ -667,7 +667,11 @@ class TypesController extends Controller
                 foreach($pdataProvider->getData() as $k => $record){
                     array_push($precords, array(
                         'id' => $record->id,
-                        'name' => $record->name
+                        'name' => $record->name,
+                        'count' => $record->count,
+                        'price' => $record->price,
+                        'pic' => Files::getImg($record->pic),
+                        'date' => $record->date
                     ));
                 }
 
