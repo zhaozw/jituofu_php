@@ -1,6 +1,7 @@
 产品模块
 ========
 * [搜索商品](#搜索商品)
+* [根据分类查询商品列表](#根据分类查询商品列表)
 * [添加商品](#添加商品)
 * [修改商品](#修改商品)
 * [删除商品](#删除商品)
@@ -67,6 +68,67 @@
 </table>
 ######出参
 通过`operation中的productsList`获取搜索结果。详见[公共参数](Public.md)
+
+####根据分类查询商品列表
+接口:`products/querybytype`
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>type</td>
+        <td>int</td>
+        <td>分类id</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>pageNum</td>
+        <td>int</td>
+        <td>页码</td>
+        <td></td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>limit</td>
+        <td>int</td>
+        <td>每页输出的数据量</td>
+        <td></td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>sort</td>
+        <td>int</td>
+        <td>排序指令</td>
+        <td>
+          1为入库日期倒序(默认)<br />
+          2为入库日期升序<br />
+          3为进货价倒序<br />
+          4为进货价升序<br />
+        </td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>type</td>
+        <td>int</td>
+        <td>分类id</td>
+        <td></td>
+        <td>Yes</td>
+        <td>按分类查询商品</td>
+    </tr>
+</table>
+######出参
+通过`operation中的products`获取搜索结果。详见[公共参数](Public.md)
 
 ####添加商品
 接口:`products/create`

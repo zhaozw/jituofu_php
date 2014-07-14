@@ -27,7 +27,7 @@ class ProductsController extends Controller
     {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view', 'create', 'update', 'delete', 'query', 'search'),
+                'actions' => array('index', 'view', 'create', 'update', 'delete', 'query', 'search', 'querybytype'),
                 'users' => array('*'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -140,6 +140,100 @@ class ProductsController extends Controller
             }
 
             F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("productsList"=>$records));
+        }
+    }
+
+    /**
+     * 根据分类查询商品列表
+     */
+    public function actionQueryByType(){
+        if (F::loggedCommonVerify()) {
+            $public = F::getPublicData();
+            $operation = F::getOperationData();
+
+            $typeId = @$operation['type'];
+            $pageNum = @$operation['pageNum'];
+            $limit = @$operation['limit'];
+            $userId = $public['userId'];
+            $sort = @$operation['sort'];
+
+            if(!$typeId){
+                return F::returnError(F::lang("PRODUCT_TYPEID_SPECIFY"));
+            }
+
+            if(!$pageNum){
+                $pageNum = 1;
+            }
+            if(!$limit){
+                $limit = 10;
+            }
+            if(!$sort){
+                $sort = 1;
+            }
+
+            $pageNum = $pageNum - 1;
+
+            $criteria = new CDbCriteria;
+            $criteria->addCondition('user_id=' . $userId);
+            $criteria->addCondition('status=1');
+            $criteria->addCondition("type=$typeId");
+
+            $count = Products::model()->count($criteria);
+
+            $pages = new CPagination($count);
+            $pages->setPageSize($limit);
+            $pages->setCurrentPage($pageNum);
+            $pages->applyLimit($criteria);
+
+            $csort = new CSort;
+
+            if ($sort == 1) {
+                //date倒序
+                $csort->defaultOrder = 'date DESC';
+            } else if ($sort == 2) {
+                //date升序
+                $csort->defaultOrder = 'date ASC';
+            } else if ($sort == 3) {
+                //price倒序
+                $csort->defaultOrder = 'price DESC';
+            } else if ($sort == 4) {
+                //price升序
+                $csort->defaultOrder = 'price ASC';
+            }
+
+            $result = Products::model()->findAll($criteria);
+            $dataProvider = new CArrayDataProvider(
+                $result,
+                array(
+                    'sort' => $csort,
+                    'pagination' => $pages
+                )
+            );
+            $records = array();
+
+            $lastPage = $count / $limit;
+            if (is_float($lastPage)) {
+                $lastPage = $lastPage + 1;
+            }
+            if (($pageNum + 1) > $lastPage) {
+                F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("products"=>$records));
+                return;
+            }
+
+            foreach ($dataProvider->getData() as $k => $record) {
+                array_push($records, array(
+                    'id' => $record->id,
+                    'name' => $record->name,
+                    'count' => $record->count,
+                    'price' => $record->price,
+                    'pic' => Files::getImg($record->pic),
+                    'date' => $record->date,
+                    //'type' => Types::getTypeNameById($record->type),
+                    //'remark' => $record->remark
+                ));
+            }
+
+            F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("products"=>$records));
         }
     }
 
