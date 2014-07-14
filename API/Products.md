@@ -9,6 +9,8 @@
 * [根据商品id查询商品信息](#根据商品id查询商品信息)
 
 ####搜索商品
+目前只能根据商品名称模糊查找
+
 接口:`products/search`
 ######入参
 <table>
@@ -56,14 +58,6 @@
         </td>
         <td>Yes</td>
         <td></td>
-    </tr>
-    <tr>
-        <td>type</td>
-        <td>int</td>
-        <td>分类id</td>
-        <td></td>
-        <td>Yes</td>
-        <td>按分类查询商品</td>
     </tr>
 </table>
 ######出参
@@ -117,14 +111,6 @@
         </td>
         <td>Yes</td>
         <td></td>
-    </tr>
-    <tr>
-        <td>type</td>
-        <td>int</td>
-        <td>分类id</td>
-        <td></td>
-        <td>Yes</td>
-        <td>按分类查询商品</td>
     </tr>
 </table>
 ######出参
