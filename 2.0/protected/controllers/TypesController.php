@@ -643,6 +643,20 @@ class TypesController extends Controller
 
                 F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("types" => $crecords));
             }else if($pcount > 0){
+                $csort = new CSort;
+                if ($sort == 1) {
+                    //date倒序
+                    $csort->defaultOrder = 'date DESC';
+                } else if ($sort == 2) {
+                    //date升序
+                    $csort->defaultOrder = 'date ASC';
+                } else if ($sort == 3) {
+                    //price倒序
+                    $csort->defaultOrder = 'price DESC';
+                } else if ($sort == 4) {
+                    //price升序
+                    $csort->defaultOrder = 'price ASC';
+                }
                 $ppages = new CPagination($pcount);
                 $ppages->setPageSize($limit);
                 $ppages->setCurrentPage($pageNum);
@@ -650,6 +664,7 @@ class TypesController extends Controller
                 $pdataProvider = new CArrayDataProvider(
                     $presult,
                     array(
+                        'sort' => $csort,
                         'pagination' => $ppages
                     )
                 );
