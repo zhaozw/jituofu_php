@@ -48,7 +48,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'id',
 		'user_id',
 		'pid',
-		'count',
+		'selling_count',
 		'selling_price',
 		'who',
 		/*
@@ -56,6 +56,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'remark',
 		'merge_id',
 		*/
+        'price',
 		array(
 			'class'=>'CButtonColumn',
 		),

@@ -24,11 +24,12 @@ $this->menu=array(
 		'id',
 		'user_id',
 		'pid',
-		'count',
+		'selling_count',
 		'selling_price',
 		'who',
 		'date',
 		'remark',
 		'merge_id',
+        'price',
 	),
 )); ?>

@@ -5,7 +5,7 @@
 ####新增记账
 接口:`cashier/create`
 
-新增记账时,公共参数`operation`的值为数组类型,数组中的每一项为一条商品销售记录,如果该数组的长度大于2,系统自动识别为合并记账.
+新增记账时,在公共参数`operation`中，通过`list`传入，`list`的值为数组类型,数组中的每一项为一条商品销售记录,如果该数组的长度大于2,系统自动识别为合并记账.
 ######入参
 <table>
     <tr>
@@ -17,7 +17,34 @@
         <td>其它</td>
     </tr>
     <tr>
-        <td>count</td>
+        <td>list</td>
+        <td>Array</td>
+        <td>记账清单</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>date</td>
+        <td>datetime</td>
+        <td>日期</td>
+        <td></td>
+        <td>Yes</td>
+        <td>默认为系统时间</td>
+    </tr>
+</table>
+######list模型
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>sellingCount</td>
         <td>String</td>
         <td>销售数量(可为浮点数)</td>
         <td></td>
@@ -31,14 +58,6 @@
         <td></td>
         <td>NO</td>
         <td></td>
-    </tr>
-    <tr>
-        <td>date</td>
-        <td>datetime</td>
-        <td>日期</td>
-        <td></td>
-        <td>NO</td>
-        <td>默认为系统时间</td>
     </tr>
     <tr>
         <td>pid</td>

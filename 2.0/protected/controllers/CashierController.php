@@ -66,15 +66,23 @@ class CashierController extends Controller
             $public = F::getPublicData();
             $operation = F::getOperationData();
 
-            if(!is_array($operation)){
+            $list = @$operation['list'];
+
+            if(!$list){
+                return F::returnError(F::lang('CASHIER_LIST_SPECIFY'));
+            }
+
+            $list = @CJSON::decode($list);
+
+            if(!is_array($list)){
                 F::returnError(F::lang('CASHIER_NOT_IS_ARRAY'));
             }
-            if(count($operation) <= 0){
+            if(count($list) <= 0){
                 F::returnError(F::lang('CASHIER_EMPTY_DATA'));
             }
 
             $isMerge = 0;//是否是合并记账
-            if(count($operation) >= 2){
+            if(count($list) >= 2){
                 $isMerge = 1;
             }
 
@@ -84,54 +92,56 @@ class CashierController extends Controller
             $mergerCashierDate = F::getCurrentDatetime();
             $mergerId = null;//合并记录的id
 
-            foreach($operation as $k => $p){
+            foreach($list as $k => $p){
+                $which = $k+1;
+
                 //如果没有商品id,则该条商品是手动输入记账台的,必须校验商品名称/进货价
                 if(!@$p['pid']){
                     //校验名称
                     $name = @F::trimAll($p['name']);
                     if(!$name){
-                        F::returnError(F::lang("PRODUCT_NAME_SPECIFY"), array("which"=>$k+1));
+                        F::returnError(F::lang("PRODUCT_NAME_SPECIFY"), array("which"=>$which));
                         break;
                     }else if(F::minMaxRange(2, 15, $name)){
-                        F::returnError(F::lang("PRODUCT_CHAR_LIMIT", array(2, 15)), array("which"=>$k+1));
+                        F::returnError(F::lang("PRODUCT_CHAR_LIMIT", array(2, 15)), array("which"=>$which));
                         break;
                     }
                     //校验进货价
                     $price = @F::trimAll($p['price']);
                     if(!$price){
-                        F::returnError(F::lang("PRODUCT_PRICE_SPECIFY"), array("which"=>$k+1));
+                        F::returnError(F::lang("PRODUCT_PRICE_SPECIFY"), array("which"=>$which));
                         break;
                     }else if(!is_numeric($price)){
-                        F::returnError(F::lang('PRODUCT_PRICE_INVALID'), array("which"=>$k+1));
+                        F::returnError(F::lang('PRODUCT_PRICE_INVALID'), array("which"=>$which));
                         break;
                     }
                 }
                 //校验销售数量
-                $count = @F::trimAll($p['count']);
-                if(!$count){
-                    F::returnError(F::lang("CASHIER_COUNT_SPECIFY"), array("which"=>$k+1));
+                $sellingCount = @F::trimAll($p['sellingCount']);
+                if(!$sellingCount){
+                    F::returnError(F::lang("CASHIER_COUNT_SPECIFY"), array("which"=>$which));
                     break;
-                }else if(!is_numeric($count)){
-                    F::returnError(F::lang("CASHIER_COUNT_INVALID"), array("which"=>$k+1));
+                }else if(!is_numeric($sellingCount)){
+                    F::returnError(F::lang("CASHIER_COUNT_INVALID"), array("which"=>$which));
                     break;
                 }
                 //校验销售价格
                 $sellingPrice = @F::trimAll($p['sellingPrice']);
                 if(!$sellingPrice){
-                    F::returnError(F::lang("CASHIER_SELLINGPRICE_SPECIFY"), array("which"=>$k+1));
+                    F::returnError(F::lang("CASHIER_SELLINGPRICE_SPECIFY"), array("which"=>$which));
                     break;
                 }else if(!is_numeric($sellingPrice)){
-                    F::returnError(F::lang("CASHIER_SELLINGPRICE_INVALID"), array("which"=>$k+1));
+                    F::returnError(F::lang("CASHIER_SELLINGPRICE_INVALID"), array("which"=>$which));
                     break;
                 }
 
-                $totalCount += $count;
-                $totalSellingPrice += $sellingPrice*$count;
-                $mergerCashierDate = $p['date'] ? $p['date'] : F::getCurrentDatetime();//以最后一条商品的date做为合并记账的date
+                $totalCount += $sellingCount;
+                $totalSellingPrice += $sellingPrice*$sellingCount;
+                $mergerCashierDate = @$p['date'] ? $p['date'] : $mergerCashierDate;//以最后一条商品的date做为合并记账的date
 
                 //检查商品是否存在
                 if(@$p['pid'] && !Products::isExistById($p['pid'])){
-                    F::returnError(F::lang("PRODUCT_NO_EXIST"), array("which"=>$k+1));
+                    F::returnError(F::lang("PRODUCT_NO_EXIST"), array("which"=>$which));
                     break;
                 }
             }
@@ -152,27 +162,24 @@ class CashierController extends Controller
             }
 
             $savedCount = 0;//成功保存到cashier表的计数器
-            foreach($operation as $k => $p){
+            foreach($list as $k => $p){
                 $remark = @F::trimAll($p['remark']);
                 $sellingPrice = F::trimAll($p['sellingPrice']);
-                $date = $p['date'] ? $p['date'] : F::getCurrentDatetime();
-                $count = $p['count'];
+                $date = @$p['date'] ? $p['date'] : F::getCurrentDatetime();
+                $sellingCount = F::trimAll($p['sellingCount']);
+                $price = F::trimAll($p['price']);
                 $pid = @$p['pid'];
                 //商品入库
                 if(!$pid){
-                    $defaultType = Types::getDefaultType($public['userId'], "默认分类");
                     $name = $p['name'];
-                    $count = $p['count'];
-                    $price = $p['price'];
                     $pic = "";
-                    $type = $defaultType->id;//使用默认的商品分类
-                    $remark = $remark;
+                    $type = 0;//使用默认的商品分类
 
                     $model=new Products;
                     $model->attributes=array(
                         "user_id" => $public['userId'],
                         "name" => $name,
-                        "count" => $count,
+                        "count" => $sellingCount,
                         "price" => $price,
                         "pic" => $pic,
                         "type" => $type,
@@ -180,12 +187,10 @@ class CashierController extends Controller
                         "date" => $date,
                         "status" => 1
                     );
-                    $product = Products::add($model, false);
-                    if(!$product){
-                        F::returnError(F::lang('PRODUCT_ADD_ERROR'), $model->getErrors());
-                        break;
+                    if($model->save()){
+                        $pid = $model->primaryKey;
                     }else{
-                        $pid = $product['id'];
+                        F::returnError(F::lang('PRODUCT_ADD_ERROR'), $model->getErrors());
                     }
                 }
 
@@ -198,24 +203,26 @@ class CashierController extends Controller
                     $model->attributes = array(
                         'user_id' => $public['userId'],
                         'pid' => $pid,
-                        'count' => $count,
+                        'selling_count' => $sellingCount,
                         'selling_price' => $sellingPrice,
                         'date' => $date,
                         'remark' => $remark,
-                        'merge_id' => $mergerId
+                        'merge_id' => $mergerId,
+                        'price' => $price
                     );
                 }else{
                     $model->attributes = array(
                         'user_id' => $public['userId'],
                         'pid' => $pid,
-                        'count' => $count,
+                        'selling_count' => $sellingCount,
                         'selling_price' => $sellingPrice,
                         'date' => $date,
-                        'remark' => $remark
+                        'remark' => $remark,
+                        'price' => $price
                     );
                 }
                 if($model->save()){
-                    $this->updateProductCount($pid, $count);
+                    $this->updateProductCount($pid, $sellingCount);
                     $savedCount++;
                 }else{
                     F::error("记账失败 " . CJSON::encode($model->getErrors()));
@@ -223,7 +230,7 @@ class CashierController extends Controller
                 }
             }
 
-            if($savedCount === count($operation)){
+            if($savedCount === count($list)){
                 if(!$isMerge){
                     F::returnSuccess(F::lang('CASHIER_SUCCESS'));
                 }else{

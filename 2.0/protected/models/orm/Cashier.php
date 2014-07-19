@@ -7,12 +7,14 @@
  * @property integer $id
  * @property integer $user_id
  * @property integer $pid
- * @property double $count
+ * @property double $selling_count
  * @property double $selling_price
+
  * @property string $who
  * @property string $date
  * @property string $remark
  * @property integer $merge_id
+ * @property double $price
  */
 class Cashier extends CActiveRecord
 {
@@ -32,14 +34,14 @@ class Cashier extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('user_id, pid, count, selling_price, date', 'required'),
+			array('user_id, pid, selling_count, selling_price, date, price', 'required'),
 			array('user_id, pid, merge_id', 'numerical', 'integerOnly'=>true),
-			array('count, selling_price', 'numerical'),
+			array('selling_count, selling_price, price', 'numerical'),
 			array('who', 'length', 'max'=>40),
 			array('remark', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, user_id, pid, count, selling_price, who, date, remark, merge_id', 'safe', 'on'=>'search'),
+			array('id, user_id, pid, selling_count, price, selling_price, who, date, remark, merge_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -63,12 +65,13 @@ class Cashier extends CActiveRecord
 			'id' => '交易ID',
 			'user_id' => '用户id',
 			'pid' => '商品ID',
-			'count' => '销售数量',
+			'selling_count' => '销售数量',
 			'selling_price' => '销售价格',
 			'who' => '销售员',
 			'date' => '销售日期',
 			'remark' => '备注',
 			'merge_id' => '合并记账的id,如果有这个id,表示该条记录是属于某条合并记账流水',
+            'price' => '进货价格',
 		);
 	}
 
@@ -93,12 +96,13 @@ class Cashier extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('user_id',$this->user_id);
 		$criteria->compare('pid',$this->pid);
-		$criteria->compare('count',$this->count);
+		$criteria->compare('selling_count',$this->count);
 		$criteria->compare('selling_price',$this->selling_price);
 		$criteria->compare('who',$this->who,true);
 		$criteria->compare('date',$this->date,true);
 		$criteria->compare('remark',$this->remark,true);
 		$criteria->compare('merge_id',$this->merge_id);
+        $criteria->compare('price',$this->price);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

@@ -27,14 +27,19 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'count'); ?>
-		<?php echo $form->textField($model,'count'); ?>
+		<?php echo $form->label($model,'selling_count'); ?>
+		<?php echo $form->textField($model,'selling_count'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->label($model,'selling_price'); ?>
 		<?php echo $form->textField($model,'selling_price'); ?>
 	</div>
+
+    <div class="row">
+        <?php echo $form->label($model,'price'); ?>
+        <?php echo $form->textField($model,'price'); ?>
+    </div>
 
 	<div class="row">
 		<?php echo $form->label($model,'who'); ?>

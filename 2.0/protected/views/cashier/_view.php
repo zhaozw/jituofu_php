@@ -17,13 +17,17 @@
 	<?php echo CHtml::encode($data->pid); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('count')); ?>:</b>
-	<?php echo CHtml::encode($data->count); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('selling_count')); ?>:</b>
+	<?php echo CHtml::encode($data->selling_count); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('selling_price')); ?>:</b>
 	<?php echo CHtml::encode($data->selling_price); ?>
 	<br />
+
+    <b><?php echo CHtml::encode($data->getAttributeLabel('price')); ?>:</b>
+    <?php echo CHtml::encode($data->price); ?>
+    <br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('who')); ?>:</b>
 	<?php echo CHtml::encode($data->who); ?>

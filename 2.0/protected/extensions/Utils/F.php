@@ -366,6 +366,7 @@ class F
         $resultData = array();
         $resultData['public'] = array('updateUrl' => "", 'updateTitle' => "", 'resultStatus' => 400, 'memo' => $msg);
         $resultData['operation'] = $data;
+        F::debug(CJSON::encode($resultData));
         echo CJSON::encode($resultData);
         Yii::app()->end();
     }

@@ -32,9 +32,9 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'count'); ?>
-		<?php echo $form->textField($model,'count'); ?>
-		<?php echo $form->error($model,'count'); ?>
+		<?php echo $form->labelEx($model,'selling_count'); ?>
+		<?php echo $form->textField($model,'selling_count'); ?>
+		<?php echo $form->error($model,'selling_count'); ?>
 	</div>
 
 	<div class="row">
@@ -42,6 +42,12 @@
 		<?php echo $form->textField($model,'selling_price'); ?>
 		<?php echo $form->error($model,'selling_price'); ?>
 	</div>
+
+    <div class="row">
+        <?php echo $form->labelEx($model,'price'); ?>
+        <?php echo $form->textField($model,'price'); ?>
+        <?php echo $form->error($model,'price'); ?>
+    </div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'who'); ?>

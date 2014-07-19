@@ -140,6 +140,7 @@ return array(
 
     //记账台
     "CASHIER_NOT_IS_ARRAY" => "只接收数组",
+    "CASHIER_LIST_SPECIFY" => "请提供记账清单",
     "CASHIER_EMPTY_DATA" => "空数据",
     "CASHIER_COUNT_SPECIFY" => "请填写销售数量",
     "CASHIER_COUNT_INVALID" => "销售数量不正确",
