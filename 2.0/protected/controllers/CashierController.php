@@ -108,7 +108,7 @@ class CashierController extends Controller
                     }
                     //校验进货价
                     $price = @F::trimAll($p['price']);
-                    if(!$price){
+                    if(strlen($price) <= 0){
                         F::returnError(F::lang("PRODUCT_PRICE_SPECIFY"), array("which"=>$which));
                         break;
                     }else if(!is_numeric($price)){
@@ -118,7 +118,7 @@ class CashierController extends Controller
                 }
                 //校验销售数量
                 $sellingCount = @F::trimAll($p['sellingCount']);
-                if(!$sellingCount){
+                if(strlen($sellingCount) <= 0){
                     F::returnError(F::lang("CASHIER_COUNT_SPECIFY"), array("which"=>$which));
                     break;
                 }else if(!is_numeric($sellingCount)){
@@ -127,7 +127,7 @@ class CashierController extends Controller
                 }
                 //校验销售价格
                 $sellingPrice = @F::trimAll($p['sellingPrice']);
-                if(!$sellingPrice){
+                if(strlen($sellingPrice) <= 0){
                     F::returnError(F::lang("CASHIER_SELLINGPRICE_SPECIFY"), array("which"=>$which));
                     break;
                 }else if(!is_numeric($sellingPrice)){
