@@ -67,6 +67,11 @@ class CashierController extends Controller
             $operation = F::getOperationData();
 
             $list = @$operation['list'];
+            $date = @$operation['date'];
+
+            if(!$date || strlen($date) <= 0){
+                $date = F::getCurrentDatetime();
+            }
 
             if(!$list){
                 return F::returnError(F::lang('CASHIER_LIST_SPECIFY'));
@@ -137,7 +142,6 @@ class CashierController extends Controller
 
                 $totalCount += $sellingCount;
                 $totalSellingPrice += $sellingPrice*$sellingCount;
-                $mergerCashierDate = @$p['date'] ? $p['date'] : $mergerCashierDate;//以最后一条商品的date做为合并记账的date
 
                 //检查商品是否存在
                 if(@$p['pid'] && !Products::isExistById($p['pid'])){
@@ -152,7 +156,7 @@ class CashierController extends Controller
                     'user_id' => $public['userId'],
                     'totalSellingPrice' => $totalSellingPrice,
                     'totalCount' => $totalCount,
-                    'date' => $mergerCashierDate
+                    'date' => $date
 
                 ));
                 if(!$mergerId){
@@ -165,7 +169,6 @@ class CashierController extends Controller
             foreach($list as $k => $p){
                 $remark = @F::trimAll($p['remark']);
                 $sellingPrice = F::trimAll($p['sellingPrice']);
-                $date = @$p['date'] ? $p['date'] : F::getCurrentDatetime();
                 $sellingCount = F::trimAll($p['sellingCount']);
                 $price = F::trimAll($p['price']);
                 $pid = @$p['pid'];
@@ -261,7 +264,7 @@ class CashierController extends Controller
             if($record->updateByPk($pid, array('count' => $newCount)) > 0){
                 return true;
             }else{
-                F::error("更新商品 $pid 的库存失败");
+                F::error("更新商品 $pid 的库存失败"+CJSON::encode($record->getErrors()));
                 return false;
             }
         }
