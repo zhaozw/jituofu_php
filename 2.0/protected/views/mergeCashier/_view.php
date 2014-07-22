@@ -13,12 +13,12 @@
 	<?php echo CHtml::encode($data->user_id); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('totalSellingPrice')); ?>:</b>
-	<?php echo CHtml::encode($data->totalSellingPrice); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('totalSalePrice')); ?>:</b>
+	<?php echo CHtml::encode($data->totalSalePrice); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('totalCount')); ?>:</b>
-	<?php echo CHtml::encode($data->totalCount); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('totalSaleCount')); ?>:</b>
+	<?php echo CHtml::encode($data->totalSaleCount); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('date')); ?>:</b>

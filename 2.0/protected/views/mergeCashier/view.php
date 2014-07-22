@@ -23,8 +23,8 @@ $this->menu=array(
 	'attributes'=>array(
 		'id',
 		'user_id',
-		'totalSellingPrice',
-		'totalCount',
+		'totalSalePrice',
+		'totalSaleCount',
 		'date',
 	),
 )); ?>

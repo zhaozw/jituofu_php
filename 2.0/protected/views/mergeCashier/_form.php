@@ -26,15 +26,15 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'totalSellingPrice'); ?>
-		<?php echo $form->textField($model,'totalSellingPrice'); ?>
-		<?php echo $form->error($model,'totalSellingPrice'); ?>
+		<?php echo $form->labelEx($model,'totalSalePrice'); ?>
+		<?php echo $form->textField($model,'totalSalePrice'); ?>
+		<?php echo $form->error($model,'totalSalePrice'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'totalCount'); ?>
-		<?php echo $form->textField($model,'totalCount'); ?>
-		<?php echo $form->error($model,'totalCount'); ?>
+		<?php echo $form->labelEx($model,'totalSaleCount'); ?>
+		<?php echo $form->textField($model,'totalSaleCount'); ?>
+		<?php echo $form->error($model,'totalSaleCount'); ?>
 	</div>
 
 	<div class="row">

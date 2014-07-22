@@ -22,13 +22,13 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'totalSellingPrice'); ?>
-		<?php echo $form->textField($model,'totalSellingPrice'); ?>
+		<?php echo $form->label($model,'totalSalePrice'); ?>
+		<?php echo $form->textField($model,'totalSalePrice'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'totalCount'); ?>
-		<?php echo $form->textField($model,'totalCount'); ?>
+		<?php echo $form->label($model,'totalSaleCount'); ?>
+		<?php echo $form->textField($model,'totalSaleCount'); ?>
 	</div>
 
 	<div class="row">

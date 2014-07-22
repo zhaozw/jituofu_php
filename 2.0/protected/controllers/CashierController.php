@@ -154,8 +154,8 @@ class CashierController extends Controller
             if($isAddedMergerCashier === 0 && $isMerge){
                 $mergerId = MergeCashier::add(array(
                     'user_id' => $public['userId'],
-                    'totalSellingPrice' => $totalSellingPrice,
-                    'totalCount' => $totalCount,
+                    'totalSalePrice' => $totalSellingPrice,
+                    'totalSaleCount' => $totalCount,
                     'date' => $date
 
                 ));

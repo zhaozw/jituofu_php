@@ -141,7 +141,7 @@ class SalesReportController extends Controller
             $cashier_pages->setCurrentPage($pageNum);
             $cashier_pages->applyLimit($cashier_criteria);
 
-            $records = array();
+            $cashier_records = array();
             $cashier_result = Cashier::model()->findAll($cashier_criteria);
             $cashier_dataProvider = new CArrayDataProvider(
                 $cashier_result,
@@ -155,11 +155,99 @@ class SalesReportController extends Controller
                 $cashier_lastPage = $cashier_lastPage + 1;
             }
             if (($pageNum + 1) > $cashier_lastPage) {
-                F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("products"=>$records));
+                F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("products"=>$cashier_records));
                 return;
             }
 
-            var_dump($cashier_dataProvider->getData());
+            foreach ($cashier_dataProvider->getData() as $k => $record) {
+                $product_record = Products::model()->findByAttributes(array('id'=>$record->pid, 'user_id' => $userId));
+                array_push($cashier_records, array(
+                    'isMerge' => 0,
+                    'id' => $record->id,
+                    'name'=>$product_record->name,
+                    'typeId'=>$product_record->type,
+                    'selling_count' => $record->selling_count,
+                    'selling_price' => $record->selling_price,
+                    'price' => $record->price,
+                    'date' => $record->date,
+                    'remark' => $record->remark
+                ));
+            }
+
+            //合并记账台
+            $mergecashier_criteria = new CDbCriteria;
+            $mergecashier_criteria->addCondition('user_id=' . $userId);
+            $mergecashier_criteria->addCondition("date >= '$start'");
+            $mergecashier_criteria->addCondition("date <= '$end'");
+
+            $mergecashier_count = MergeCashier::model()->count($mergecashier_criteria);
+            $mergecashier_pages = new CPagination($mergecashier_count);
+            $mergecashier_pages->setPageSize($limit);
+            $mergecashier_pages->setCurrentPage($pageNum);
+            $mergecashier_pages->applyLimit($mergecashier_criteria);
+
+            $mergecashier_records = array();
+            $mergecashier_result = MergeCashier::model()->findAll($mergecashier_criteria);
+            $mergecashier_dataProvider = new CArrayDataProvider(
+                $mergecashier_result,
+                array(
+                    'sort' => $csort,
+                    'pagination' => $mergecashier_pages
+                )
+            );
+            $mergecashier_lastPage = $mergecashier_count / $limit;
+            if (is_float($mergecashier_lastPage)) {
+                $mergecashier_lastPage = $mergecashier_lastPage + 1;
+            }
+            if (($pageNum + 1) > $mergecashier_lastPage) {
+                F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("products"=>$mergecashier_records));
+                return;
+            }
+
+            foreach ($mergecashier_dataProvider->getData() as $k => $record) {
+                array_push($mergecashier_records, array(
+                    'isMerge' => 1,
+                    'id' => $record->id,
+                    'totalSalePrice'=>$record->totalSalePrice,
+                    'totalSaleCount' => $record->totalSaleCount,
+                    'date' => $record->date,
+                ));
+            }
+
+            $salesList = array();
+
+            //将合并记账列表push到cashier列表，然后再排序
+            if(count($mergecashier_records) > 0){
+                foreach($mergecashier_records as $k => $record){
+                    array_push($cashier_records, $record);
+                }
+
+                function cmpDESC($a, $b) {
+
+                    if ($a['date'] == $b['date']) {
+                        return 0;
+                    }
+
+                    return ($a['date'] < $b['date']) ? 1 : -1;
+                }
+                function cmpASC($a, $b) {
+
+                    if ($a['date'] == $b['date']) {
+                        return 0;
+                    }
+
+                    return ($a['date'] < $b['date']) ? -1 : 1;
+                }
+                if($sort == 1){
+                    usort($cashier_records, 'cmpDESC');
+                }else{
+                    usort($cashier_records, 'cmpASC');
+                }
+            }
+
+            $salesList = $cashier_records;
+
+            F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("salesList"=>$salesList));
         }
     }
 

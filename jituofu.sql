@@ -2185,8 +2185,8 @@ INSERT INTO `marketing` (`id`, `productVersion`, `productId`, `channelId`, `netw
 CREATE TABLE IF NOT EXISTS `merge_cashier` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `totalSellingPrice` float NOT NULL COMMENT '总销售价格',
-  `totalCount` float NOT NULL COMMENT '总销售数量',
+  `totalSalePrice` float NOT NULL COMMENT '总销售价格',
+  `totalSaleCount` float NOT NULL COMMENT '总销售数量',
   `date` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=43 ;
@@ -2195,7 +2195,7 @@ CREATE TABLE IF NOT EXISTS `merge_cashier` (
 -- Dumping data for table `merge_cashier`
 --
 
-INSERT INTO `merge_cashier` (`id`, `user_id`, `totalSellingPrice`, `totalCount`, `date`) VALUES
+INSERT INTO `merge_cashier` (`id`, `user_id`, `totalSalePrice`, `totalSaleCount`, `date`) VALUES
 (1, 106, 5375.1, 432.43, '2014-04-23 11:31:44'),
 (2, 106, 6549.46, 466.97, '2014-04-26 13:04:47'),
 (3, 106, 6549.46, 466.97, '2014-04-26 13:25:16'),
