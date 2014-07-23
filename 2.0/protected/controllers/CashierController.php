@@ -92,7 +92,7 @@ class CashierController extends Controller
             }
 
             $isAddedMergerCashier = 0;//有否已经记录合并记账
-            $totalCount = 0;//总销售数量
+            $totalSellingCount = 0;//总销售数量
             $totalSellingPrice = 0;//总销售价格
             $mergerCashierDate = F::getCurrentDatetime();
             $mergerId = null;//合并记录的id
@@ -140,8 +140,8 @@ class CashierController extends Controller
                     break;
                 }
 
-                $totalCount += $sellingCount;
-                $totalSellingPrice += $sellingPrice*$sellingCount;
+                $totalSellingCount += F::roundCount($sellingCount);
+                $totalSellingPrice += F::roundPrice($sellingPrice) * F::roundCount($sellingCount);
 
                 //检查商品是否存在
                 if(@$p['pid'] && !Products::isExistById($p['pid'])){
@@ -155,7 +155,7 @@ class CashierController extends Controller
                 $mergerId = MergeCashier::add(array(
                     'user_id' => $public['userId'],
                     'totalSalePrice' => $totalSellingPrice,
-                    'totalSaleCount' => $totalCount,
+                    'totalSaleCount' => $totalSellingCount,
                     'date' => $date
 
                 ));
@@ -182,8 +182,8 @@ class CashierController extends Controller
                     $model->attributes=array(
                         "user_id" => $public['userId'],
                         "name" => $name,
-                        "count" => $sellingCount,
-                        "price" => $price,
+                        "count" => F::roundCount($sellingCount),
+                        "price" => F::roundPrice($price),
                         "pic" => $pic,
                         "type" => $type,
                         "remark" => $remark,
@@ -206,8 +206,8 @@ class CashierController extends Controller
                     $model->attributes = array(
                         'user_id' => $public['userId'],
                         'pid' => $pid,
-                        'selling_count' => $sellingCount,
-                        'selling_price' => $sellingPrice,
+                        'selling_count' => F::roundCount($sellingCount),
+                        'selling_price' => F::roundPrice($sellingPrice),
                         'date' => $date,
                         'remark' => $remark,
                         'merge_id' => $mergerId,
@@ -217,15 +217,15 @@ class CashierController extends Controller
                     $model->attributes = array(
                         'user_id' => $public['userId'],
                         'pid' => $pid,
-                        'selling_count' => $sellingCount,
-                        'selling_price' => $sellingPrice,
+                        'selling_count' => F::roundCount($sellingCount),
+                        'selling_price' => F::roundPrice($sellingPrice),
                         'date' => $date,
                         'remark' => $remark,
                         'price' => $price
                     );
                 }
                 if($model->save()){
-                    $this->updateProductCount($pid, $sellingCount);
+                    $this->updateProductCount($pid, F::roundCount($sellingCount));
                     $savedCount++;
                 }else{
                     F::error("记账失败 " . CJSON::encode($model->getErrors()));

@@ -728,6 +728,28 @@ class F
         }
     }
 
+    /**
+     * 四舍五入商品数量
+     * @param $count
+     * @return float
+     */
+    public static function roundCount($count){
+        if(stripos($count, '.')){
+            return round($count, 2);
+        }else{
+            return $count;
+        }
+    }
+
+    /**
+     * 四舍五入商品价格
+     * @param $price
+     * @return float
+     */
+    public static function roundPrice($price){
+        return round($price, 2);
+    }
+
     public static function debug($content, $cat="debug"){
         Yii::log($content, CLogger::LEVEL_TRACE, $cat);
     }

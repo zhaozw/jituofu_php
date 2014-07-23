@@ -151,7 +151,7 @@ class SalesReportController extends Controller
             //统计记账台的总销售量和总销售额
             foreach($cashier_result as $k => $v){
                 $result['totalCount'] += $v -> selling_count;
-                $result['totalPrice'] += ($v -> selling_price * $v -> selling_count);
+                $result['totalPrice'] += F::roundPrice($v -> selling_price * $v -> selling_count);
             }
 
             $cashier_dataProvider = new CArrayDataProvider(
@@ -230,10 +230,7 @@ class SalesReportController extends Controller
             $salesList = $cashier_records;
 
             $result['salesList'] = $salesList;
-            $result['totalPrice'] = round($result['totalPrice'], 2);
-            if(stripos($result['totalCount'], '.')){
-                $result['totalCount'] = round($result['totalCount'], 2);
-            }
+            $result['totalPrice'] = $result['totalPrice'];
 
             F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("salesList" => $result));
         }
