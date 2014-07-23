@@ -154,8 +154,6 @@ class CashierController extends Controller
             if($isAddedMergerCashier === 0 && $isMerge){
                 $mergerId = MergeCashier::add(array(
                     'user_id' => $public['userId'],
-                    'totalSalePrice' => $totalSellingPrice,
-                    'totalSaleCount' => $totalSellingCount,
                     'date' => $date
 
                 ));
@@ -211,7 +209,7 @@ class CashierController extends Controller
                         'date' => $date,
                         'remark' => $remark,
                         'merge_id' => $mergerId,
-                        'price' => $price
+                        'price' => F::roundPrice($price)
                     );
                 }else{
                     $model->attributes = array(
@@ -221,7 +219,7 @@ class CashierController extends Controller
                         'selling_price' => F::roundPrice($sellingPrice),
                         'date' => $date,
                         'remark' => $remark,
-                        'price' => $price
+                        'price' => F::roundPrice($price)
                     );
                 }
                 if($model->save()){

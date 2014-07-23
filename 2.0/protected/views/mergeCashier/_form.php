@@ -26,18 +26,6 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'totalSalePrice'); ?>
-		<?php echo $form->textField($model,'totalSalePrice'); ?>
-		<?php echo $form->error($model,'totalSalePrice'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'totalSaleCount'); ?>
-		<?php echo $form->textField($model,'totalSaleCount'); ?>
-		<?php echo $form->error($model,'totalSaleCount'); ?>
-	</div>
-
-	<div class="row">
 		<?php echo $form->labelEx($model,'date'); ?>
 		<?php echo $form->textField($model,'date'); ?>
 		<?php echo $form->error($model,'date'); ?>

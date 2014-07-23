@@ -1,0 +1,213 @@
+销售记录模块
+========
+* [按开始和结束时间搜索](#按开始和结束时间搜索)
+
+####按开始和结束时间搜索
+
+接口:`salesreport/index`或`salesreport/`
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>start</td>
+        <td>String</td>
+        <td>开始时间</td>
+        <td>YYYY-mm-dd</td>
+        <td>No</td>
+        <td>年月日</td>
+    </tr>
+    <tr>
+        <td>end</td>
+        <td>String</td>
+        <td>结束时间</td>
+        <td>YYYY-mm-dd</td>
+        <td>No</td>
+        <td>年月日</td>
+    </tr>
+    <tr>
+        <td>limit</td>
+        <td>int</td>
+        <td>每页输出的数据量</td>
+        <td>默认为10</td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>sort</td>
+        <td>int</td>
+        <td>排序指令</td>
+        <td>
+          1为日期倒序(默认)<br />
+          2为日期升序<br />
+        </td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>pageNum</td>
+        <td>int</td>
+        <td>页码</td>
+        <td>默认为1</td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+</table>
+
+######出参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>totalCost</td>
+        <td>Float</td>
+        <td>总成本</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>totalCount</td>
+        <td>Float</td>
+        <td>总销售量</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>totalPrice</td>
+        <td>Float</td>
+        <td>总销售额</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>salesList</td>
+        <td>Array</td>
+        <td>销售列表</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+</table>
+
+######salesList数据模型
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>id</td>
+        <td>int</td>
+        <td>销售记录id</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>date</td>
+        <td>String</td>
+        <td>销售记录日期</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>isMerge</td>
+        <td>Int</td>
+        <td>是否是合并类型的销售记录</td>
+        <td>0 or 1</td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>name</td>
+        <td>String</td>
+        <td>商品名称</td>
+        <td>当`isMerge`为0时，name才会返回</td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>typeId</td>
+        <td>Int</td>
+        <td>商品分类id</td>
+        <td>当`isMerge`为0时，typeId才会返回</td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>selling_count</td>
+        <td>Float</td>
+        <td>单笔销售记录的销售数量</td>
+        <td>当`isMerge`为0时，selling_count才会返回</td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>selling_price</td>
+        <td>Float</td>
+        <td>单笔销售记录的销售价格</td>
+        <td>当`isMerge`为0时，selling_price才会返回</td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>price</td>
+        <td>Float</td>
+        <td>商品销售时的进货价格</td>
+        <td>当`isMerge`为0时，price才会返回</td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>remark</td>
+        <td>String</td>
+        <td>销售记录备注</td>
+        <td>当`isMerge`为0时，remark才会返回</td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>totalSalePrice</td>
+        <td>Float</td>
+        <td>销售总额</td>
+        <td>当`isMerge`为1时，totalSalePrice才会返回</td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>totalSaleCount</td>
+        <td>Float</td>
+        <td>总销售数量</td>
+        <td>当`isMerge`为1时，totalSaleCount才会返回</td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>totalCost</td>
+        <td>Float</td>
+        <td>总成本</td>
+        <td>当`isMerge`为1时，totalCost才会返回</td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+</table>

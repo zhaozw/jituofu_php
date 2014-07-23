@@ -129,7 +129,7 @@ class SalesReportController extends Controller
             $pageNum = $pageNum - 1;
 
             //返回给客户端的结果
-            $result = array("totalCount" => 0, "totalPrice" =>0, "salesList" => array());
+            $result = array("totalCost" => 0, "totalCount" => 0, "totalPrice" =>0, "salesList" => array());
 
             //记账台
             $cashier_criteria = new CDbCriteria;
@@ -150,6 +150,7 @@ class SalesReportController extends Controller
 
             //统计记账台的总销售量和总销售额
             foreach($cashier_result as $k => $v){
+                $result['totalCost'] += F::roundPrice($v -> price * $v -> selling_count);
                 $result['totalCount'] += $v -> selling_count;
                 $result['totalPrice'] += F::roundPrice($v -> selling_price * $v -> selling_count);
             }
@@ -172,11 +173,12 @@ class SalesReportController extends Controller
             //汇总合并记账表和记账表中的总销售量和总销售额的数据
             $result['totalCount'] += $mergecashier_records['totalCount'];
             $result['totalPrice'] += $mergecashier_records['totalPrice'];
+            $result['totalCost'] += $mergecashier_records['totalCost'];
 
             //如果记账台的数据已经加载结束，尝试看看合并记账是否有数据
             if (($pageNum + 1) > $cashier_lastPage) {
                 $result['salesList'] = $mergecashier_records['salesList'];
-                F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("salesList" => $result));
+                F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), $result);
                 return;
             }
 
@@ -232,13 +234,13 @@ class SalesReportController extends Controller
             $result['salesList'] = $salesList;
             $result['totalPrice'] = $result['totalPrice'];
 
-            F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("salesList" => $result));
+            F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), $result);
         }
     }
 
     public function getMergeCashierSalesReport($verfiyLoginState = true)
     {
-        $result = array("totalCount" => 0, "totalPrice" =>0, "salesList" => array());
+        $result = array("totalCost" => 0, "totalCount" => 0, "totalPrice" =>0, "salesList" => array());
         if ($verfiyLoginState && !F::loggedCommonVerify()) {
             return $result;
         }
@@ -299,8 +301,14 @@ class SalesReportController extends Controller
 
 
         foreach($mergecashier_result as $k => $v){
-            $result['totalCount'] += $v -> totalSaleCount;
-            $result['totalPrice'] += $v -> totalSalePrice;
+            $cashier_record = Cashier::model()->findAllByAttributes(array('merge_id' => $v->id, 'user_id' => $userId));
+            if($cashier_record && count($cashier_record) > 0){
+                foreach($cashier_record as $c => $ck){
+                    $result['totalCount'] += $ck -> selling_count;
+                    $result['totalPrice'] += F::roundPrice($ck -> selling_count * $ck -> selling_price);
+                    $result['totalCost'] += F::roundPrice($ck -> price * $ck -> selling_count);
+                }
+            }
         }
 
         $mergecashier_dataProvider = new CArrayDataProvider(
@@ -318,11 +326,23 @@ class SalesReportController extends Controller
         //如果不是最后一页
         if (($pageNum + 1) <= $mergecashier_lastPage) {
             foreach ($mergecashier_dataProvider->getData() as $k => $record) {
+                $cashier_record = Cashier::model()->findAllByAttributes(array('merge_id' => $record->id, 'user_id' => $userId));
+                $totalCount = 0;
+                $totalPrice = 0;
+                $totalCost = 0;
+                if($cashier_record && count($cashier_record) > 0){
+                    foreach($cashier_record as $c => $ck){
+                        $totalCount += $ck -> selling_count;
+                        $totalPrice += F::roundPrice($ck -> selling_count * $ck -> selling_price);
+                        $totalCost += F::roundPrice($ck -> price * $ck -> selling_count);
+                    }
+                }
                 array_push($mergecashier_records, array(
                     'isMerge' => 1,
                     'id' => $record->id,
-                    'totalSalePrice' => $record->totalSalePrice,
-                    'totalSaleCount' => $record->totalSaleCount,
+                    'totalCost' => $totalCost,
+                    'totalSalePrice' => $totalPrice,
+                    'totalSaleCount' => $totalCount,
                     'date' => $record->date,
                 ));
             }

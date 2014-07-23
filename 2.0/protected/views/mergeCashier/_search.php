@@ -22,16 +22,6 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'totalSalePrice'); ?>
-		<?php echo $form->textField($model,'totalSalePrice'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'totalSaleCount'); ?>
-		<?php echo $form->textField($model,'totalSaleCount'); ?>
-	</div>
-
-	<div class="row">
 		<?php echo $form->label($model,'date'); ?>
 		<?php echo $form->textField($model,'date'); ?>
 	</div>

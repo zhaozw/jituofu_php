@@ -6,7 +6,6 @@
  * The followings are the available columns in table 'merge_cashier':
  * @property integer $id
  * @property integer $user_id
- * @property double $totalSalePrice
  * @property double $totalSaleCount
  * @property string $date
  */
@@ -28,12 +27,11 @@ class MergeCashier extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('user_id, totalSalePrice, totalSaleCount, date', 'required'),
+			array('user_id, date', 'required'),
 			array('user_id', 'numerical', 'integerOnly'=>true),
-			array('totalSalePrice, totalSaleCount', 'numerical'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, user_id, totalSalePrice, totalSaleCount, date', 'safe', 'on'=>'search'),
+			array('id, user_id, date', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -56,8 +54,6 @@ class MergeCashier extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'user_id' => 'User',
-			'totalSalePrice' => '总销售价格',
-			'totalSaleCount' => '总销售数量',
 			'date' => 'Date',
 		);
 	}
@@ -82,8 +78,6 @@ class MergeCashier extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('user_id',$this->user_id);
-		$criteria->compare('totalSalePrice',$this->totalSalePrice);
-		$criteria->compare('totalSaleCount',$this->totalSaleCount);
 		$criteria->compare('date',$this->date,true);
 
 		return new CActiveDataProvider($this, array(
