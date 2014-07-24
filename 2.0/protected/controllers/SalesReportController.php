@@ -344,6 +344,7 @@ class SalesReportController extends Controller
                     'totalSalePrice' => $totalPrice,
                     'totalSaleCount' => $totalCount,
                     'date' => $record->date,
+                    'list' => $cashier_record
                 ));
             }
         }

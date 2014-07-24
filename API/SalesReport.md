@@ -210,4 +210,12 @@
         <td>Yes</td>
         <td></td>
     </tr>
+    <tr>
+        <td>list</td>
+        <td>Array</td>
+        <td>合并记账列表详情</td>
+        <td>当`isMerge`为1时，list才会返回</td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
 </table>
