@@ -168,7 +168,7 @@ class SalesReportController extends Controller
             $mergecashier_profit_results = $this->getMergeCashierProfits(false);
 
             if (($this->pageNum + 1) > $cashier_lastPage) {
-                F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), $mergecashier_profit_results);
+                F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("profits" => $mergecashier_profit_results));
                 return;
             }
 
@@ -186,11 +186,21 @@ class SalesReportController extends Controller
 
             //合并结果
             $totalResults = array();
+            $date_array = array();//存储cashier数据的日期
             foreach ($cashier_profit_results as $k => $v) {
+                $cdate = preg_split('/\\s/', $v['date']);
                 array_push($totalResults, $v);
+                array_push($date_array, $cdate[0]);
             }
             foreach ($mergecashier_profit_results as $k => $v) {
-                array_push($totalResults, $v);
+                $mcdate = preg_split('/\\s/', $v['date']);
+                //将合并记账里的日期与cashier中相同的日期，进行数据合并
+                if(array_search($mcdate[0], $date_array) !== false){
+                    $pos = array_search($mcdate[0], $date_array);
+                    $totalResults[$pos]['profit'] += $v['profit'];
+                }else{
+                    array_push($totalResults, $v);
+                }
             }
 
             //排序
@@ -243,7 +253,7 @@ class SalesReportController extends Controller
             } else if ($this->sort == 4) { //利润升序
                 usort($totalResults, 'lrCmpASC');
             }
-            F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), $totalResults);
+            F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("profits" => $totalResults));
         }
     }
 
