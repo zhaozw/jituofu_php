@@ -128,6 +128,200 @@ class SalesReportController extends Controller
         $this->pageNum = $this->pageNum - 1;
     }
 
+    public function getCosts()
+    {
+        if (F::loggedCommonVerify()) {
+            $public = F::getPublicData();
+            $operation = F::getOperationData();
+
+            $this->prepareParameters();
+            $cashier_cost_results = array();
+
+            //记账台相关的数据
+            $cashier_criteria = new CDbCriteria;
+            $cashier_criteria->addCondition('user_id=' . $this->uid);
+            $cashier_criteria->addCondition("merge_id IS NULL");
+            $cashier_criteria->addCondition("date >= '$this->start'");
+            $cashier_criteria->addCondition("date <= '$this->end'");
+
+            $cashier_result = Cashier::model()->findAll($cashier_criteria);
+            $cashier_count = count($cashier_result);
+            $cashier_pages = new CPagination($cashier_count);
+            $cashier_pages->setPageSize($this->limit);
+            $cashier_pages->setCurrentPage($this->pageNum);
+            $cashier_pages->applyLimit($cashier_criteria);
+
+            $cashier_dataProvider = new CArrayDataProvider(
+                $cashier_result,
+                array(
+                    'sort' => $this->csort,
+                    'pagination' => $cashier_pages
+                )
+            );
+
+            $cashier_lastPage = $cashier_count / $this->limit;
+            if (is_float($cashier_lastPage)) {
+                $cashier_lastPage = $cashier_lastPage + 1;
+            }
+
+            //获取合并记账成本列表
+            $mergecashier_cost_results = $this->getMergeCashierCosts(false);
+
+            if (($this->pageNum + 1) > $cashier_lastPage) {
+                F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("costs" => $mergecashier_cost_results));
+                return;
+            }
+
+            foreach ($cashier_dataProvider->getData() as $k => $v) {
+                $result = array("date" => $v->date, "cost" => "", "id" => $v->id);
+
+                $selling_count = $v->selling_count;
+                $price = $v->price;
+
+                $result['cost'] = F::roundPrice($price * $selling_count);
+
+                array_push($cashier_cost_results, $result);
+            }
+
+            //合并结果
+            $totalResults = array();
+            $date_array = array();//存储cashier数据的日期
+            foreach ($cashier_cost_results as $k => $v) {
+                $cdate = preg_split('/\\s/', $v['date']);
+                $v['date'] = $cdate[0];
+
+                //将记账里的日期与$totalResults中相同的日期，进行数据合并
+                if(array_search($cdate[0], $date_array) !== false){
+                    $pos = array_search($cdate[0], $date_array);
+                    $totalResults[$pos]['cost'] += $v['cost'];
+                }else{
+                    array_push($totalResults, $v);
+                    array_push($date_array, $cdate[0]);
+                }
+            }
+            foreach ($mergecashier_cost_results as $k => $v) {
+                $mcdate = preg_split('/\\s/', $v['date']);
+                $v['date'] = $mcdate[0];
+                //将合并记账里的日期与cashier中相同的日期，进行数据合并
+                if(array_search($mcdate[0], $date_array) !== false){
+                    $pos = array_search($mcdate[0], $date_array);
+                    $totalResults[$pos]['cost'] += $v['cost'];
+                }else{
+                    array_push($totalResults, $v);
+                }
+            }
+
+            //排序
+            function dateCmpDESC($a, $b)
+            {
+
+                if ($a['date'] == $b['date']) {
+                    return 0;
+                }
+
+                return ($a['date'] < $b['date']) ? 1 : -1;
+            }
+
+            function cbCmpDESC($a, $b)
+            {
+
+                if ($a['cost'] == $b['cost']) {
+                    return 0;
+                }
+
+                return ($a['cost'] < $b['cost']) ? 1 : -1;
+            }
+
+            function dateCmpASC($a, $b)
+            {
+
+                if ($a['date'] == $b['date']) {
+                    return 0;
+                }
+
+                return ($a['date'] < $b['date']) ? -1 : 1;
+            }
+
+            function cbCmpASC($a, $b)
+            {
+
+                if ($a['cost'] == $b['cost']) {
+                    return 0;
+                }
+
+                return ($a['cost'] < $b['cost']) ? -1 : 1;
+            }
+
+            if ($this->sort == 1) {
+                usort($totalResults, 'dateCmpDESC');
+            } else if ($this->sort == 2) {
+                usort($totalResults, 'dateCmpASC');
+            } else if ($this->sort == 3) { //成本倒序
+                usort($totalResults, 'cbCmpDESC');
+            } else if ($this->sort == 4) { //成本升序
+                usort($totalResults, 'cbCmpASC');
+            }
+            F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("costs" => $totalResults));
+        }
+    }
+
+    public function getMergeCashierCosts($verfiyLoginState = true)
+    {
+        $mergecashier_cost_results = array();
+
+        if ($verfiyLoginState && !F::loggedCommonVerify()) {
+            return $mergecashier_cost_results;
+        }
+
+        $this->prepareParameters();
+
+        //合并记账台相关数据
+        $mergecashier_criteria = new CDbCriteria;
+        $mergecashier_criteria->addCondition('user_id=' . $this->uid);
+        $mergecashier_criteria->addCondition("date >= '$this->start'");
+        $mergecashier_criteria->addCondition("date <= '$this->end'");
+
+        $mergecashier_result = MergeCashier::model()->findAll($mergecashier_criteria);
+        $mergecashier_count = count($mergecashier_result);
+        $mergecashier_pages = new CPagination($mergecashier_count);
+        $mergecashier_pages->setPageSize($this->limit);
+        $mergecashier_pages->setCurrentPage($this->pageNum);
+        $mergecashier_pages->applyLimit($mergecashier_criteria);
+
+        $mergecashier_dataProvider = new CArrayDataProvider(
+            $mergecashier_result,
+            array(
+                'sort' => $this->csort,
+                'pagination' => $mergecashier_pages
+            )
+        );
+
+        $mergecashier_lastPage = $mergecashier_count / $this->limit;
+        if (is_float($mergecashier_lastPage)) {
+            $mergecashier_lastPage = $mergecashier_lastPage + 1;
+        }
+        if (($this->pageNum + 1) <= $mergecashier_lastPage) {
+            foreach ($mergecashier_dataProvider->getData() as $k => $v) {
+                $result = array("date" => $v->date, "cost" => "", "id" => $v->id);
+                $cashier_record = Cashier::model()->findAllByAttributes(array('merge_id' => $v->id, 'user_id' => $this->uid));
+
+                $costs = 0;
+                if ($cashier_record && count($cashier_record) > 0) {
+                    foreach ($cashier_record as $c => $ck) {
+                        $selling_count = $ck->selling_count;
+                        $price = $ck->price;
+
+                        $costs += F::roundPrice($price * $selling_count);
+                    }
+                }
+                $result['cost'] = $costs;
+                array_push($mergecashier_cost_results, $result);
+            }
+        }
+
+        return $mergecashier_cost_results;
+    }
+
     public function getProfits()
     {
         if (F::loggedCommonVerify()) {
@@ -173,7 +367,7 @@ class SalesReportController extends Controller
             }
 
             foreach ($cashier_dataProvider->getData() as $k => $v) {
-                $result = array("date" => $v->date, "profit" => "", "id" => $v->id, "isMerge" => 0);
+                $result = array("date" => $v->date, "profit" => "", "id" => $v->id);
 
                 $selling_count = $v->selling_count;
                 $price = $v->price;
@@ -189,11 +383,19 @@ class SalesReportController extends Controller
             $date_array = array();//存储cashier数据的日期
             foreach ($cashier_profit_results as $k => $v) {
                 $cdate = preg_split('/\\s/', $v['date']);
-                array_push($totalResults, $v);
-                array_push($date_array, $cdate[0]);
+                $v['date'] = $cdate[0];
+                //将记账里的日期与$totalResults中相同的日期，进行数据合并
+                if(array_search($cdate[0], $date_array) !== false){
+                    $pos = array_search($cdate[0], $date_array);
+                    $totalResults[$pos]['profit'] += $v['profit'];
+                }else{
+                    array_push($totalResults, $v);
+                    array_push($date_array, $cdate[0]);
+                }
             }
             foreach ($mergecashier_profit_results as $k => $v) {
                 $mcdate = preg_split('/\\s/', $v['date']);
+                $v['date'] = $mcdate[0];
                 //将合并记账里的日期与cashier中相同的日期，进行数据合并
                 if(array_search($mcdate[0], $date_array) !== false){
                     $pos = array_search($mcdate[0], $date_array);
@@ -294,7 +496,7 @@ class SalesReportController extends Controller
         }
         if (($this->pageNum + 1) <= $mergecashier_lastPage) {
             foreach ($mergecashier_dataProvider->getData() as $k => $v) {
-                $result = array("date" => $v->date, "profit" => "", "id" => $v->id, "isMerge" => 1);
+                $result = array("date" => $v->date, "profit" => "", "id" => $v->id);
                 $cashier_record = Cashier::model()->findAllByAttributes(array('merge_id' => $v->id, 'user_id' => $this->uid));
 
                 $profits = 0;
@@ -330,6 +532,11 @@ class SalesReportController extends Controller
             //利润报表
             if ($reportType && $reportType === "profits") {
                 return $this->getProfits();
+            }
+
+            //成本报表
+            if ($reportType && $reportType === "costs") {
+                return $this->getCosts();
             }
 
             $this->prepareParameters();

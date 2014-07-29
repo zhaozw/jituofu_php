@@ -2,6 +2,7 @@
 ========
 * [按开始和结束时间搜索](#按开始和结束时间搜索)
 * [根据开始和结束时间获取利润列表](#根据开始和结束时间获取利润列表)
+* [根据开始和结束时间获取成本列表](#根据开始和结束时间获取成本列表)
 
 ####按开始和结束时间搜索
 
@@ -303,7 +304,7 @@
         <td>date</td>
         <td>String</td>
         <td>日期</td>
-        <td></td>
+        <td>yyyy-MM-dd</td>
         <td>No</td>
         <td></td>
     </tr>
@@ -323,10 +324,107 @@
         <td>No</td>
         <td></td>
     </tr>
+</table>
+
+
+####根据开始和结束时间获取成本列表
+
+接口:`salesreport/index`或`salesreport/`
+######入参
+<table>
     <tr>
-        <td>isMerge</td>
-        <td>0 or 1</td>
-        <td>是否是合并类型的销售记录</td>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>reportType</td>
+        <td>String</td>
+        <td>报表类型</td>
+        <td>costs</td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>start</td>
+        <td>String</td>
+        <td>开始时间</td>
+        <td>YYYY-mm-dd</td>
+        <td>No</td>
+        <td>年月日</td>
+    </tr>
+    <tr>
+        <td>end</td>
+        <td>String</td>
+        <td>结束时间</td>
+        <td>YYYY-mm-dd</td>
+        <td>No</td>
+        <td>年月日</td>
+    </tr>
+    <tr>
+        <td>limit</td>
+        <td>int</td>
+        <td>每页输出的数据量</td>
+        <td>默认为10</td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>sort</td>
+        <td>int</td>
+        <td>排序指令</td>
+        <td>
+          1为日期倒序(默认)<br />
+          2为日期升序<br />
+          3为成本倒序<br />
+          4为成本升序<br />
+        </td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>pageNum</td>
+        <td>int</td>
+        <td>页码</td>
+        <td>默认为1</td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+</table>
+
+######出参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>date</td>
+        <td>String</td>
+        <td>日期</td>
+        <td>yyyy-MM-dd</td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>cost</td>
+        <td>Float</td>
+        <td>成本</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>id</td>
+        <td>Int</td>
+        <td>销售记录id</td>
         <td></td>
         <td>No</td>
         <td></td>
