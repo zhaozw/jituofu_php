@@ -545,7 +545,7 @@
                         "pic": "",
                         "pid": "696",
                         "name": "我得到，",
-                        "typeName": {}//没有分类名称
+                        "typeName": ""//没有分类名称
                     },
                     {
                         "pic": "",
@@ -564,7 +564,7 @@
                 "pid": "702",
                 "id": "1898",
                 "name": "经历",
-                "typeName": {},//没有分类名称
+                "typeName": "",//没有分类名称
                 "selling_count": "5",
                 "selling_price": "5",
                 "price": "58",
