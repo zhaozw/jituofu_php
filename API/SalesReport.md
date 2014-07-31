@@ -387,7 +387,7 @@
     <tr>
         <td>id</td>
         <td>int</td>
-        <td>销售记录id或合并记账id</td>
+        <td>销售记录id</td>
         <td></td>
         <td>No</td>
         <td></td>
@@ -406,7 +406,7 @@
         <td>是否是合并类型的销售记录</td>
         <td>0 or 1</td>
         <td>No</td>
-        <td></td>
+        <td>1是合并记账，0是单笔记账</td>
     </tr>
     <tr>
         <td>name</td>
@@ -426,11 +426,11 @@
     </tr>
     <tr>
         <td>typeName</td>
-        <td>JSONObject</td>
+        <td>Map</td>
         <td>商品分类名称</td>
         <td>当`isMerge`为0时，typeName才会返回</td>
         <td>Yes</td>
-        <td></td>
+        <td>请注意：typeName有可能是空字符串</td>
     </tr>
     <tr>
         <td>selling_count</td>
@@ -465,12 +465,12 @@
         <td></td>
     </tr>
     <tr>
-        <td>cashierlist</td>
+        <td>cashierList</td>
         <td>Array</td>
         <td>合并记账列表</td>
-        <td>当`isMerge`为1时，cashierlist才会返回</td>
+        <td>当`isMerge`为1时，cashierList才会返回</td>
         <td>Yes</td>
-        <td></td>
+        <td>`cashierList`中每一项的数据结构和isMerge为0的单笔记账数据结构是一样的</td>
     </tr>
     <tr>
         <td>products</td>
@@ -478,6 +478,22 @@
         <td>合并记账商品列表</td>
         <td>当`isMerge`为1时，products才会返回</td>
         <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>totalCount</td>
+        <td>Float</td>
+        <td>总销售量</td>
+        <td>当`isMerge`为1时，totalCount才会返回</td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>totalPrice</td>
+        <td>Float</td>
+        <td>总销售额</td>
+        <td>当`isMerge`为1时，totalPrice才会返回</td>
+        <td>No</td>
         <td></td>
     </tr>
 </table>
@@ -495,11 +511,10 @@
             {
                 "isMerge": 1,
                 "id": "39",
-                "totalCost": 32,
                 "totalSalePrice": 48,
                 "totalSaleCount": 8,
                 "date": "2015-06-01 00:00:00",
-                "cashierlist": [//合并记账清单
+                "cashierList": [//合并记账清单
                     {
                         "id": "1884",
                         "user_id": "125",
@@ -530,7 +545,7 @@
                         "pic": "",
                         "pid": "696",
                         "name": "我得到，",
-                        "typeName": ""//没有分类名称
+                        "typeName": {}//没有分类名称
                     },
                     {
                         "pic": "",
@@ -549,7 +564,7 @@
                 "pid": "702",
                 "id": "1898",
                 "name": "经历",
-                "typeName": "",//没有分类名称
+                "typeName": {},//没有分类名称
                 "selling_count": "5",
                 "selling_price": "5",
                 "price": "58",
@@ -559,11 +574,10 @@
             {
                 "isMerge": 1,
                 "id": "42",
-                "totalCost": 0,
                 "totalSalePrice": 0,
                 "totalSaleCount": 0,
                 "date": "2015-06-02 02:02:00",
-                "cashierlist": [],//合并记账没有销售清单
+                "cashierList": [],//合并记账没有销售清单
                 "products": []//合并记账没有相关的售出商品
             },
             {

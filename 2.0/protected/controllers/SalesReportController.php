@@ -694,11 +694,10 @@ class SalesReportController extends Controller
                 array_push($mergecashier_records, array(
                     'isMerge' => 1,
                     'id' => $record->id,
-                    'totalCost' => $totalCost,
                     'totalSalePrice' => $totalPrice,
                     'totalSaleCount' => $totalCount,
                     'date' => $record->date,
-                    'cashierlist' => $cashier_record,
+                    'cashierList' => $cashier_record,
                     'products' => $products
                 ));
             }
