@@ -517,32 +517,16 @@ class SalesReportController extends Controller
         return $mergecashier_profit_results;
     }
 
-    /**
-     * Lists all models.
-     */
-    public function actionIndex()
+    public function getProducts()
     {
         if (F::loggedCommonVerify(true)) {
             $public = F::getPublicData();
             $operation = F::getOperationData();
 
-            //报表类型
-            $reportType = @$operation['reportType'];
-
-            //利润报表
-            if ($reportType && $reportType === "profits") {
-                return $this->getProfits();
-            }
-
-            //成本报表
-            if ($reportType && $reportType === "costs") {
-                return $this->getCosts();
-            }
-
             $this->prepareParameters();
 
             //返回给客户端的结果
-            $result = array("totalCost" => 0, "totalCount" => 0, "totalPrice" => 0, "salesList" => array());
+            $result = array("products" => array());
 
             //记账台
             $cashier_criteria = new CDbCriteria;
@@ -560,13 +544,6 @@ class SalesReportController extends Controller
 
             $cashier_records = array();
 
-            //统计记账台的总销售量和总销售额
-            foreach ($cashier_result as $k => $v) {
-                $result['totalCost'] += F::roundPrice($v->price * $v->selling_count);
-                $result['totalCount'] += $v->selling_count;
-                $result['totalPrice'] += F::roundPrice($v->selling_price * $v->selling_count);
-            }
-
             $cashier_dataProvider = new CArrayDataProvider(
                 $cashier_result,
                 array(
@@ -580,27 +557,25 @@ class SalesReportController extends Controller
             }
 
             //获取合并记账台的相关数据
-            $mergecashier_records = $this->getMergeCashierSalesReport(false);
-
-            //汇总合并记账表和记账表中的总销售量和总销售额的数据
-            $result['totalCount'] += $mergecashier_records['totalCount'];
-            $result['totalPrice'] += $mergecashier_records['totalPrice'];
-            $result['totalCost'] += $mergecashier_records['totalCost'];
+            $mergecashier_records = $this->getMergeCashierProducts(false);
 
             //如果记账台的数据已经加载结束，尝试看看合并记账是否有数据
             if (($this->pageNum + 1) > $cashier_lastPage) {
-                $result['salesList'] = $mergecashier_records['salesList'];
+                $result['products'] = $mergecashier_records['products'];
                 F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), $result);
                 return;
             }
 
             foreach ($cashier_dataProvider->getData() as $k => $record) {
-                $product_record = Products::model()->findByAttributes(array('id' => $record->pid, 'user_id' => $userId));
+                $product_record = Products::model()->findByAttributes(array('id' => $record->pid, 'user_id' => $this->uid));
+                $typeName = Types::getTypeNameById($product_record->type);
                 array_push($cashier_records, array(
                     'isMerge' => 0,
+                    'pic' => Files::getImg($product_record->pic),
+                    'pid' => $product_record->id,
                     'id' => $record->id,
                     'name' => $product_record->name,
-                    'typeId' => $product_record->type,
+                    'typeName' => $typeName ? $typeName : "",
                     'selling_count' => $record->selling_count,
                     'selling_price' => $record->selling_price,
                     'price' => $record->price,
@@ -610,8 +585,8 @@ class SalesReportController extends Controller
             }
 
             //将合并记账列表push到cashier列表，然后再排序
-            if (count($mergecashier_records['salesList']) > 0) {
-                foreach ($mergecashier_records['salesList'] as $k => $record) {
+            if (count($mergecashier_records['products']) > 0) {
+                foreach ($mergecashier_records['products'] as $k => $record) {
                     array_push($cashier_records, $record);
                 }
 
@@ -643,16 +618,15 @@ class SalesReportController extends Controller
             }
             $salesList = $cashier_records;
 
-            $result['salesList'] = $salesList;
-            $result['totalPrice'] = $result['totalPrice'];
+            $result['products'] = $salesList;
 
             F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), $result);
         }
     }
 
-    public function getMergeCashierSalesReport($verfiyLoginState = true)
+    public function getMergeCashierProducts($verfiyLoginState = true)
     {
-        $result = array("totalCost" => 0, "totalCount" => 0, "totalPrice" => 0, "salesList" => array());
+        $result = array("products" => array());
 
         if ($verfiyLoginState && !F::loggedCommonVerify()) {
             return $result;
@@ -678,17 +652,6 @@ class SalesReportController extends Controller
 
         $mergecashier_records = array();
 
-        foreach ($mergecashier_result as $k => $v) {
-            $cashier_record = Cashier::model()->findAllByAttributes(array('merge_id' => $v->id, 'user_id' => $this->uid));
-            if ($cashier_record && count($cashier_record) > 0) {
-                foreach ($cashier_record as $c => $ck) {
-                    $result['totalCount'] += $ck->selling_count;
-                    $result['totalPrice'] += F::roundPrice($ck->selling_count * $ck->selling_price);
-                    $result['totalCost'] += F::roundPrice($ck->price * $ck->selling_count);
-                }
-            }
-        }
-
         $mergecashier_dataProvider = new CArrayDataProvider(
             $mergecashier_result,
             array(
@@ -708,12 +671,25 @@ class SalesReportController extends Controller
                 $totalCount = 0;
                 $totalPrice = 0;
                 $totalCost = 0;
+
                 if ($cashier_record && count($cashier_record) > 0) {
                     foreach ($cashier_record as $c => $ck) {
                         $totalCount += $ck->selling_count;
                         $totalPrice += F::roundPrice($ck->selling_count * $ck->selling_price);
                         $totalCost += F::roundPrice($ck->price * $ck->selling_count);
                     }
+                }
+
+                $products = array();
+                foreach($cashier_record as $kk => $vv){
+                    $product_record = Products::model()->findByAttributes(array('id' => $vv->pid, 'user_id' => $this->uid));
+                    $typeName = Types::getTypeNameById($product_record->type);
+                    array_push($products, array(
+                        'pic' => Files::getImg($product_record->pic),
+                        'pid' => $product_record->id,
+                        'name' => $product_record->name,
+                        'typeName' => $typeName ? $typeName : ""
+                    ));
                 }
                 array_push($mergecashier_records, array(
                     'isMerge' => 1,
@@ -722,12 +698,112 @@ class SalesReportController extends Controller
                     'totalSalePrice' => $totalPrice,
                     'totalSaleCount' => $totalCount,
                     'date' => $record->date,
-                    'list' => $cashier_record
+                    'cashierlist' => $cashier_record,
+                    'products' => $products
                 ));
             }
         }
 
-        $result['salesList'] = $mergecashier_records;
+        $result['products'] = $mergecashier_records;
+
+        return $result;
+    }
+
+    /**
+     * Lists all models.
+     */
+    public function actionIndex()
+    {
+        if (F::loggedCommonVerify(true)) {
+            $public = F::getPublicData();
+            $operation = F::getOperationData();
+
+            //报表类型
+            $reportType = @$operation['reportType'];
+
+            //利润报表
+            if ($reportType && $reportType === "profits") {
+                return $this->getProfits();
+            }
+
+            //成本报表
+            if ($reportType && $reportType === "costs") {
+                return $this->getCosts();
+            }
+
+            //售出商品列表
+            if ($reportType && $reportType === "products") {
+                return $this->getProducts();
+            }
+
+            $this->prepareParameters();
+
+            //返回给客户端的结果
+            $result = array("totalCost" => 0, "totalCount" => 0, "totalPrice" => 0);
+
+            //记账台
+            $cashier_criteria = new CDbCriteria;
+            $cashier_criteria->addCondition('user_id=' . $this->uid);
+            $cashier_criteria->addCondition("merge_id IS NULL");
+            $cashier_criteria->addCondition("date >= '$this->start'");
+            $cashier_criteria->addCondition("date <= '$this->end'");
+
+            $cashier_result = Cashier::model()->findAll($cashier_criteria);
+
+            $cashier_records = array();
+
+            //统计记账台的总销售量和总销售额
+            foreach ($cashier_result as $k => $v) {
+                $result['totalCost'] += F::roundPrice($v->price * $v->selling_count);
+                $result['totalCount'] += $v->selling_count;
+                $result['totalPrice'] += F::roundPrice($v->selling_price * $v->selling_count);
+            }
+
+            //获取合并记账台的相关数据
+            $mergecashier_records = $this->getMergeCashierSalesReport(false);
+
+            //汇总合并记账表和记账表中的总销售量和总销售额的数据
+            $result['totalCount'] += $mergecashier_records['totalCount'];
+            $result['totalPrice'] += $mergecashier_records['totalPrice'];
+            $result['totalCost'] += $mergecashier_records['totalCost'];
+
+            F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), $result);
+        }
+    }
+
+    public function getMergeCashierSalesReport($verfiyLoginState = true)
+    {
+        $result = array("totalCost" => 0, "totalCount" => 0, "totalPrice" => 0);
+
+        if ($verfiyLoginState && !F::loggedCommonVerify()) {
+            return $result;
+        }
+
+        $public = F::getPublicData();
+        $operation = F::getOperationData();
+
+        $this->prepareParameters();
+
+        //合并记账台
+        $mergecashier_criteria = new CDbCriteria;
+        $mergecashier_criteria->addCondition('user_id=' . $this->uid);
+        $mergecashier_criteria->addCondition("date >= '$this->start'");
+        $mergecashier_criteria->addCondition("date <= '$this->end'");
+
+        $mergecashier_result = MergeCashier::model()->findAll($mergecashier_criteria);
+
+        $mergecashier_records = array();
+
+        foreach ($mergecashier_result as $k => $v) {
+            $cashier_record = Cashier::model()->findAllByAttributes(array('merge_id' => $v->id, 'user_id' => $this->uid));
+            if ($cashier_record && count($cashier_record) > 0) {
+                foreach ($cashier_record as $c => $ck) {
+                    $result['totalCount'] += $ck->selling_count;
+                    $result['totalPrice'] += F::roundPrice($ck->selling_count * $ck->selling_price);
+                    $result['totalCost'] += F::roundPrice($ck->price * $ck->selling_count);
+                }
+            }
+        }
 
         return $result;
     }
