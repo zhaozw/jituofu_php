@@ -457,6 +457,14 @@
         <td></td>
     </tr>
     <tr>
+        <td>pid</td>
+        <td>int</td>
+        <td>商品id</td>
+        <td>当`isMerge`为0时，pid才会返回</td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+    <tr>
         <td>remark</td>
         <td>String</td>
         <td>销售记录备注</td>
