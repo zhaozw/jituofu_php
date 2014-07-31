@@ -485,7 +485,7 @@
         <td>Float</td>
         <td>总销售量</td>
         <td>当`isMerge`为1时，totalCount才会返回</td>
-        <td>No</td>
+        <td>Yes</td>
         <td></td>
     </tr>
     <tr>
@@ -493,7 +493,7 @@
         <td>Float</td>
         <td>总销售额</td>
         <td>当`isMerge`为1时，totalPrice才会返回</td>
-        <td>No</td>
+        <td>Yes</td>
         <td></td>
     </tr>
 </table>
