@@ -743,12 +743,16 @@ class SalesReportController extends Controller
                 foreach($cashier_record as $kk => $vv){
                     $product_record = Products::model()->findByAttributes(array('id' => $vv->pid, 'user_id' => $this->uid));
                     $typeName = Types::getTypeNameById($product_record->type);
-                    array_push($products, array(
+                    $product_data = array(
                         'pic' => Files::getImg($product_record->pic),
                         'pid' => $product_record->id,
                         'name' => $product_record->name,
                         'typeName' => $typeName ? $typeName : ""
-                    ));
+                    );
+                    //避免$products中出现重复的商品信息
+                    if(array_search($product_data, $products) === false){
+                        array_push($products, $product_data);
+                    }
                 }
                 array_push($mergecashier_records, array(
                     'isMerge' => 1,
