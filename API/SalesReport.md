@@ -360,6 +360,8 @@
         <td>
           1为日期倒序(默认)<br />
           2为日期升序<br />
+          3为销售总数量倒序<br />
+          4为销售总数量升序<br />
         </td>
         <td>Yes</td>
         <td></td>
@@ -519,8 +521,8 @@
             {
                 "isMerge": 1,
                 "id": "39",
-                "totalSalePrice": 48,
-                "totalSaleCount": 8,
+                "totalPrice": 48,
+                "totalCount": 8,
                 "date": "2015-06-01 00:00:00",
                 "cashierList": [//合并记账清单
                     {
@@ -582,8 +584,8 @@
             {
                 "isMerge": 1,
                 "id": "42",
-                "totalSalePrice": 0,
-                "totalSaleCount": 0,
+                "totalPrice": 0,
+                "totalCount": 0,
                 "date": "2015-06-02 02:02:00",
                 "cashierList": [],//合并记账没有销售清单
                 "products": []//合并记账没有相关的售出商品

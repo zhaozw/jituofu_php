@@ -610,10 +610,69 @@ class SalesReportController extends Controller
                     return ($a['date'] < $b['date']) ? -1 : 1;
                 }
 
+                function cmpCountDESC($a, $b)
+                {
+                    $aIsMerge = $a['isMerge'];
+                    $bIsMerge = $b['isMerge'];
+
+                    $a_count = 0;
+                    $b_count = 0;
+
+                    if($aIsMerge == 0){
+                        $a_count = $a['selling_count'];
+                    }else if($aIsMerge == 1){
+                        $a_count = $a['totalCount'];
+                    }
+
+                    if($bIsMerge == 0){
+                        $b_count = $b['selling_count'];
+                    }else if($bIsMerge == 1){
+                        $b_count = $b['totalCount'];
+                    }
+
+                    if ($a_count == $b_count) {
+                        return 0;
+                    }
+
+                    return ($a_count < $b_count) ? 1 : -1;
+                }
+
+                function cmpCountASC($a, $b)
+                {
+
+                    $aIsMerge = $a['isMerge'];
+                    $bIsMerge = $b['isMerge'];
+
+                    $a_count = 0;
+                    $b_count = 0;
+
+                    if($aIsMerge == 0){
+                        $a_count = $a['selling_count'];
+                    }else if($aIsMerge == 1){
+                        $a_count = $a['totalCount'];
+                    }
+
+                    if($bIsMerge == 0){
+                        $b_count = $b['selling_count'];
+                    }else if($bIsMerge == 1){
+                        $b_count = $b['totalCount'];
+                    }
+
+                    if ($a_count == $b_count) {
+                        return 0;
+                    }
+
+                    return ($a_count < $b_count) ? -1 : 1;
+                }
+
                 if ($this->sort == 1) {
                     usort($cashier_records, 'cmpDESC');
                 } else if ($this->sort == 2) {
                     usort($cashier_records, 'cmpASC');
+                } else if ($this->sort == 3) {
+                    usort($cashier_records, 'cmpCountDESC');
+                } else if ($this->sort == 4) {
+                    usort($cashier_records, 'cmpCountASC');
                 }
             }
             $salesList = $cashier_records;
@@ -694,8 +753,8 @@ class SalesReportController extends Controller
                 array_push($mergecashier_records, array(
                     'isMerge' => 1,
                     'id' => $record->id,
-                    'totalSalePrice' => $totalPrice,
-                    'totalSaleCount' => $totalCount,
+                    'totalPrice' => $totalPrice,
+                    'totalCount' => $totalCount,
                     'date' => $record->date,
                     'cashierList' => $cashier_record,
                     'products' => $products
