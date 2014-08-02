@@ -4,6 +4,7 @@
 * [根据开始和结束时间获取利润列表](#根据开始和结束时间获取利润列表)
 * [根据开始和结束时间获取成本列表](#根据开始和结束时间获取成本列表)
 * [根据开始和结束时间获取商品列表](#根据开始和结束时间获取商品列表)
+* [退货](#退货)
 
 ####按开始和结束时间搜索
 
@@ -609,3 +610,78 @@
     }
 }
 ```
+
+####退货
+
+接口:`salesreport/returnsale`
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>id</td>
+        <td>Int</td>
+        <td>销售记录id</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>count</td>
+        <td>Float</td>
+        <td>退货数量</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>reason</td>
+        <td>String</td>
+        <td>退货原因</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>date</td>
+        <td>String</td>
+        <td>退货日期</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>remark</td>
+        <td>String</td>
+        <td>退货备注</td>
+        <td></td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+</table>
+
+######出参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>newSaleCount</td>
+        <td>Flaot</td>
+        <td>最新的销售数量</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+</table>

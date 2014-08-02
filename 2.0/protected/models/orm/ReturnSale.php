@@ -9,7 +9,7 @@
  * @property integer $sale_id
  * @property string $reason
  * @property string $remark
- * @property integer $who
+ * @property string $who
  * @property string $date
  * @property double $count
  */
@@ -32,8 +32,9 @@ class ReturnSale extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('user_id, sale_id, reason, date, count', 'required'),
-			array('user_id, sale_id, who', 'numerical', 'integerOnly'=>true),
+			array('user_id, sale_id', 'numerical', 'integerOnly'=>true),
 			array('count', 'numerical'),
+			array('who', 'length', 'max'=>40),
 			array('remark', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -92,7 +93,7 @@ class ReturnSale extends CActiveRecord
 		$criteria->compare('sale_id',$this->sale_id);
 		$criteria->compare('reason',$this->reason,true);
 		$criteria->compare('remark',$this->remark,true);
-		$criteria->compare('who',$this->who);
+		$criteria->compare('who',$this->who,true);
 		$criteria->compare('date',$this->date,true);
 		$criteria->compare('count',$this->count);
 
@@ -111,6 +112,8 @@ class ReturnSale extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+
 
     /**
      * 添加一条退货记录

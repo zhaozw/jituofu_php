@@ -88,7 +88,7 @@ class SalesReportController extends Controller
 
     public function actionReturnsale()
     {
-        if (F::loggedCommonVerify()) {
+        if (F::loggedCommonVerify(true)) {
             $public = F::getPublicData();
             $operation = F::getOperationData();
 
@@ -142,8 +142,8 @@ class SalesReportController extends Controller
                     "date" => $date ? $date : F::getCurrentDatetime(),
                     "count" => $count,
                 );
-                if($return_sale_model -> save()){
-                    F::returnSuccess(F::lang('RETURNSALE_SUCCESS', array("newSaleCount" => $new_count)));
+                if(ReturnSale::add($return_sale_model)){
+                    F::returnSuccess(F::lang('RETURNSALE_SUCCESS'), array("newSaleCount" => $new_count));
                 }else{
                     F::returnError(F::lang('RETURNSALE_ERROR'));
                 }
