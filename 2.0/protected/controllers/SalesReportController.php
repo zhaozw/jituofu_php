@@ -113,6 +113,8 @@ class SalesReportController extends Controller
                 return F::returnError(F::lang('RETURNSALE_COUNT_SPECIFY'));
             }else if($count <= 0){
                 return F::returnError(F::lang('RETURNSALE_COUNT_INVALID'));
+            }else{
+                $count = F::roundCount($count);
             }
 
             if(!$reason){
