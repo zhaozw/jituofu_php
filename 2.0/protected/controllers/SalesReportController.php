@@ -31,7 +31,7 @@ class SalesReportController extends Controller
     {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view'),
+                'actions' => array('index', 'view', 'returnsale'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -86,6 +86,71 @@ class SalesReportController extends Controller
 
     }
 
+    public function actionReturnsale()
+    {
+        if (F::loggedCommonVerify()) {
+            $public = F::getPublicData();
+            $operation = F::getOperationData();
+
+            $userId = $public['userId'];
+            $id = @$operation['id'];//销售记录id
+            $count = @$operation['count'];//退货数量
+            $reason = @$operation['reason'];
+            $remark = @$operation['remark'];
+            $date = @$operation['date'];
+
+            if(!$remark){
+                $remark = "";
+            }
+
+            if (!$id) {
+               return F::returnError(F::lang('RETURNSALE_ID_SPECIFY'));
+            } else if (!is_numeric($id)) {
+               return F::returnError(F::lang('RETURNSALE_ID_INVALID'));
+            }
+
+            if (!$count) {
+                return F::returnError(F::lang('RETURNSALE_COUNT_SPECIFY'));
+            }else if($count <= 0){
+                return F::returnError(F::lang('RETURNSALE_COUNT_INVALID'));
+            }
+
+            if(!$reason){
+                return F::returnError(F::lang('RETURNSALE_REASON_SPECIFY'));
+            }
+
+            $record = Cashier::model()->findByAttributes(array('id'=>$id, 'user_id' => $userId));
+
+            if(!$record){
+                return F::returnError(F::lang('RETURNSALE_NO_EXIST'));
+            }
+            $record_count = $record->getAttribute("selling_count");
+
+            if($record_count < $count){
+                return F::returnError(F::lang('RETURNSALE_COUNT_INVALID_MAX'));
+            }
+
+            $new_count = $record_count - $count;
+            $record->selling_count = $new_count;
+            if($record->save("selling_count")){
+                $return_sale_model = new ReturnSale();
+                $return_sale_model->attributes = array(
+                    "user_id" => $userId,
+                    "sale_id" => $id,
+                    "reason" => $reason,
+                    "remark" => $remark,
+                    "date" => $date ? $date : F::getCurrentDatetime(),
+                    "count" => $count,
+                );
+                if($return_sale_model -> save()){
+                    F::returnSuccess(F::lang('RETURNSALE_SUCCESS', array("newSaleCount" => $new_count)));
+                }else{
+                    F::returnError(F::lang('RETURNSALE_ERROR'));
+                }
+            }
+        }
+    }
+
     public function prepareParameters()
     {
         $operation = F::getOperationData();
@@ -130,7 +195,7 @@ class SalesReportController extends Controller
 
     public function getCosts()
     {
-        if (F::loggedCommonVerify()) {
+        if (F::loggedCommonVerify(true)) {
             $public = F::getPublicData();
             $operation = F::getOperationData();
 
@@ -324,7 +389,7 @@ class SalesReportController extends Controller
 
     public function getProfits()
     {
-        if (F::loggedCommonVerify()) {
+        if (F::loggedCommonVerify(true)) {
             $public = F::getPublicData();
             $operation = F::getOperationData();
 

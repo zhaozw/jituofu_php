@@ -168,6 +168,17 @@ return array(
     //通用
     "COMMON_QUERY_SUCCESS" => "查询成功",
     "COMMON_CZ_SUCCESS" => "操作成功",
-    "COMMON_CZ_ERROR" => "操作失败"
+    "COMMON_CZ_ERROR" => "操作失败",
+
+    //退货
+    "RETURNSALE_ID_SPECIFY" => "请指定销售记录id",
+    "RETURNSALE_ID_INVALID" => "无效的销售记录id",
+    "RETURNSALE_COUNT_SPECIFY" => "请指定退货数量",
+    "RETURNSALE_REASON_SPECIFY" => "请指定退货原因",
+    "RETURNSALE_COUNT_INVALID" => "退货数量无效",
+    "RETURNSALE_COUNT_INVALID_MAX" => "退货数量大于销售数量",
+    "RETURNSALE_NO_EXIST" => "销售记录不存在",
+    "RETURNSALE_ERROR" => "退货失败",
+    "RETURNSALE_SUCCESS" => "退货成功",
 );
 ?>

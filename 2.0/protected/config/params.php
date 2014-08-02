@@ -24,5 +24,5 @@ return array(
         'maxFileSize' => 1000*1000*10,//文件最大为10mb
         'fileType' => array('png', 'jpeg', 'jpg'),
         'defaultImgPlaceholder' => "http://baidu.com",//默认占位图片
-        'fileHost' => "http://192.168.1.101/uploadfiles"//附件主机名
+        'fileHost' => "http://192.168.1.102/uploadfiles"//附件主机名
 );
