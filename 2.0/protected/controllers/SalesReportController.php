@@ -158,7 +158,7 @@ class SalesReportController extends Controller
         $operation = F::getOperationData();
         $public = F::getPublicData();
 
-        $this->uid = $public['userId'];;
+        $this->uid = $public['userId'];
 
         $this->start = @$operation['start'];
         $this->end = @$operation['end'];
@@ -838,17 +838,86 @@ class SalesReportController extends Controller
         return $result;
     }
 
+    public function getTypes(){
+        $public = F::getPublicData();
+        $operation = F::getOperationData();
+
+        $this->prepareParameters();
+
+        $cashier_criteria = new CDbCriteria;
+        $cashier_criteria->addCondition('user_id=' . $this->uid);
+        $cashier_criteria->addCondition("date >= '$this->start'");
+        $cashier_criteria->addCondition("date <= '$this->end'");
+
+        $result = array();
+        $typeNames = array();
+        $cashier_result = Cashier::model()->findAll($cashier_criteria);
+        foreach ($cashier_result as $k => $v) {
+            $product_record = Products::model()->findByAttributes(array('id' => $v->pid, 'user_id' => $this->uid));
+            $typeName = Types::getTypeNameById($product_record->type);//分类名称数据
+            $parentName = $typeName && isset($typeName['parent']) ? $typeName['parent'] : "未知大分类";
+            $childName = $typeName && isset($typeName['child']) ? $typeName['child'] : "未知小分类";
+            $count = $v->selling_count;
+            $childTypeData = array("typeName" => $childName, "count" => $count);
+            $which = array();//已存的分类数据
+            foreach($result as $kk => $vv){
+                if(isset($vv['typeName']) && $vv['typeName'] == $parentName){
+                    $which = $vv;
+                    //将已存的分类数据暂时删除
+                    array_splice($result, $kk, 1);
+                    break;
+                }
+            }
+
+            if(isset($which['typeName']) && $which['typeName'] ==  $parentName){
+                $which['count'] += $count;
+                //如果已存的分类中有小分类
+                if(isset($which['child'])){
+                    //合并重名的小分类
+                    $whichChild = array();//已存的小分类数据
+                    foreach($which['child'] as $kkk => $vvv){
+                        if($vvv['typeName'] && $vvv['typeName'] == $childName){
+                            $whichChild = $vvv;
+                            //将已存的小分类数据暂时删除
+                            array_splice($which['child'], $kkk, 1);
+                            break;
+                        }
+                    }
+                    if(isset($whichChild['typeName']) && $whichChild['typeName'] ==  $childName){
+                        $whichChild['count'] += $count;
+                        array_push($which['child'], $whichChild);
+                    }else{
+                        array_push($which['child'], $childTypeData);
+                    }
+                }else{
+                    $which['child'] = array($childTypeData);
+                }
+                //将更新后的已存分类数据push到result
+                array_push($result, $which);
+            }else{
+                array_push($result, array("typeName" => $parentName, "count" =>$v->selling_count, "child" => array($childTypeData)));
+            }
+        }
+
+        F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), $result);
+    }
+
     /**
      * Lists all models.
      */
     public function actionIndex()
     {
-        if (F::loggedCommonVerify(true)) {
+        if (F::loggedCommonVerify()) {
             $public = F::getPublicData();
             $operation = F::getOperationData();
 
             //报表类型
             $reportType = @$operation['reportType'];
+
+            //查询分类销售概况
+            if ($reportType && $reportType === "type") {
+                return $this->getTypes();
+            }
 
             //利润报表
             if ($reportType && $reportType === "profits") {
