@@ -5,6 +5,7 @@
 * [根据开始和结束时间获取成本列表](#根据开始和结束时间获取成本列表)
 * [根据开始和结束时间获取商品列表](#根据开始和结束时间获取商品列表)
 * [退货](#退货)
+* [获取商品分类销售概况](#获取商品分类销售概况)
 
 ####按开始和结束时间搜索
 
@@ -685,3 +686,112 @@
         <td></td>
     </tr>
 </table>
+
+####获取商品分类销售概况
+
+接口:`salesreport/index`或`salesreport/`
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>reportType</td>
+        <td>String</td>
+        <td>报表类型</td>
+        <td>type</td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>start</td>
+        <td>String</td>
+        <td>开始时间</td>
+        <td>YYYY-mm-dd</td>
+        <td>No</td>
+        <td>年月日</td>
+    </tr>
+    <tr>
+        <td>end</td>
+        <td>String</td>
+        <td>结束时间</td>
+        <td>YYYY-mm-dd</td>
+        <td>No</td>
+        <td>年月日</td>
+    </tr>
+</table>
+
+######出参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>typeName</td>
+        <td>String</td>
+        <td>大分类名称</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>count</td>
+        <td>Float</td>
+        <td>当前分类下的销售总数量</td>
+        <td></td>
+        <td>No</td>
+        <td>等于其下的所有小分类销售数量总和</td>
+    </tr>
+    <tr>
+        <td>child</td>
+        <td>Array</td>
+        <td>当前大分类下的所有小分类销售数据</td>
+        <td></td>
+        <td>Yes</td>
+        <td></td>
+    </tr>
+</table>
+获取数据后，通过`operation`获取`saleTypeList`
+
+```javascript
+{
+    "public": {
+        "updateUrl": "",
+        "updateTitle": "",
+        "resultStatus": 100,
+        "memo": "查询成功"
+    },
+    "operation": {
+        "saleTypeList": [
+            {
+                "typeName": "默认分类112",
+                "count": 7.37
+            },
+            {
+                "typeName": "未知大分类",
+                "count": 3.58,
+                "child": [
+                    {
+                        "typeName": "未知小分类",
+                        "count": 3.58
+                    }
+                ]
+            },
+            {
+                "typeName": "荣锋利",
+                "count": "1.79"
+            }
+        ]
+    }
+}
+```

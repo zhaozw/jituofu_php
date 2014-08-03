@@ -887,19 +887,45 @@ class SalesReportController extends Controller
                         $whichChild['count'] += $count;
                         array_push($which['child'], $whichChild);
                     }else{
-                        array_push($which['child'], $childTypeData);
+                        if($typeName && !isset($typeName['child'])){
+
+                        }else{
+                            array_push($which['child'], $childTypeData);
+                        }
                     }
                 }else{
-                    $which['child'] = array($childTypeData);
+                    if($typeName && !isset($typeName['child'])){
+
+                    }else{
+                        $which['child'] = array($childTypeData);
+                    }
                 }
                 //将更新后的已存分类数据push到result
                 array_push($result, $which);
             }else{
-                array_push($result, array("typeName" => $parentName, "count" =>$v->selling_count, "child" => array($childTypeData)));
+                if($typeName && !isset($typeName['child'])){
+                    array_push($result, array("typeName" => $parentName, "count" =>$v->selling_count));
+                }else{
+                    array_push($result, array("typeName" => $parentName, "count" =>$v->selling_count, "child" => array($childTypeData)));
+                }
             }
         }
 
-        F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), $result);
+        function cmpCountDESC($a, $b)
+        {
+            $a_count = $a['count'];
+            $b_count = $b['count'];
+
+            if ($a_count == $b_count) {
+                return 0;
+            }
+
+            return ($a_count < $b_count) ? 1 : -1;
+        }
+
+        usort($result, 'cmpCountDESC');
+
+        F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("saleTypeList" => $result));
     }
 
     /**
