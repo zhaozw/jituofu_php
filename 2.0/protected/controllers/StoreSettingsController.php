@@ -32,7 +32,7 @@ class StoreSettingsController extends Controller
                 'users' => array('admin'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('update'),
+                'actions' => array('update', 'get'),
                 'users' => array('*'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -78,7 +78,28 @@ class StoreSettingsController extends Controller
         ));
     }
 
-    /**
+    public function actionGet()
+    {
+        if (F::loggedCommonVerify(true)) {
+            $public = F::getPublicData();
+            $operation = F::getOperationData();
+            $userId = $public['userId'];
+
+            if(!@$operation['clientId']){
+               return F::returnError(F::lang('MEMO_NO_CLIENTID'));
+            }
+
+            $record = StoreSettings::model()->findByAttributes(array('user_id' => $userId));
+
+            if (!$record) {
+                return F::returnError(F::lang("STORE_NO_EXIST"));
+            }else{
+                return F::returnSuccess(F::lang("COMMON_QUERY_SUCCESS"), array("storeSettings" => $record));
+            }
+        }
+    }
+
+   /**
      * Updates a particular model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated

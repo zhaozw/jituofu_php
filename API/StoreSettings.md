@@ -1,6 +1,7 @@
 商家信息模块
 ========
 * [更新商家名称](#更新商家名称)
+* [获取商户基本信息](#获取商户基本信息)
 
 ####更新商家名称
 接口:`storesettings/update`
@@ -41,6 +42,71 @@ public中的userId必须传入
         <td></td>
         <td></td>
         <td></td>
+        <td></td>
+    </tr>
+</table>
+
+####获取商户基本信息
+接口:`storesettings/get`
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>clientId</td>
+        <td>String</td>
+        <td>客户端设备ID</td>
+        <td></td>
+        <td>NO</td>
+        <td></td>
+    </tr>
+</table>
+######出参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>id</td>
+        <td>Int</td>
+        <td></td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>user_id</td>
+        <td>Int</td>
+        <td>用户id</td>
+        <td></td>
+        <td>NO</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>tip_rent</td>
+        <td>Int</td>
+        <td>是否开户每日录入租金的提醒</td>
+        <td>0 or 1</td>
+        <td>No</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>name</td>
+        <td>String</td>
+        <td>商户名称</td>
+        <td></td>
+        <td>No</td>
         <td></td>
     </tr>
 </table>
