@@ -17,5 +17,9 @@
 	<?php echo CHtml::encode($data->tip_rent); ?>
 	<br />
 
+    <b><?php echo CHtml::encode($data->getAttributeLabel('name')); ?>:</b>
+    <?php echo CHtml::encode($data->tip_rent); ?>
+    <br />
+
 
 </div>

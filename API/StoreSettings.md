@@ -1,0 +1,46 @@
+商家信息模块
+========
+* [更新商家名称](#更新商家名称)
+
+####更新商家名称
+接口:`storesettings/update`
+
+public中的userId必须传入
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>name</td>
+        <td>String</td>
+        <td>商家名称</td>
+        <td></td>
+        <td>No</td>
+        <td></td>
+    </tr>
+</table>
+######出参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>参见公共参数</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>

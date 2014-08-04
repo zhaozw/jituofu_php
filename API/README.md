@@ -62,3 +62,4 @@ var requestData = {
 * [销售记录](SalesReport.md)
 * [帮助](Help.md)
 * [反馈](Feedback.md)
+* [商家信息](StoreSettings.md)

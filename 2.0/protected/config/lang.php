@@ -180,5 +180,13 @@ return array(
     "RETURNSALE_NO_EXIST" => "销售记录不存在",
     "RETURNSALE_ERROR" => "退货失败",
     "RETURNSALE_SUCCESS" => "退货成功",
+
+    //店铺设置
+    "STORE_NAME_SPECIFY" => "请填写商户名称",
+    "STORE_NO_EXIST" => "该商户不存在",
+    "STORE_NAME_CHAR_LIMIT" => "商户名称必须是 %m1% 到 %m2% 位中英文或数字",
+    "STORE_NAME_NO_UPDATE" => "商户名称没有更新",
+    "SOTRE_UPDATE_ERROR" => "商家信息更新失败",
+    "SOTRE_UPDATE_SUCCESS" => "商家信息更新成功",
 );
 ?>

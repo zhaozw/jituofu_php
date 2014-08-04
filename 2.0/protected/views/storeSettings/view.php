@@ -24,5 +24,6 @@ $this->menu=array(
 		'id',
 		'user_id',
 		'tip_rent',
+        'name'
 	),
 )); ?>

@@ -7,6 +7,7 @@
  * @property integer $id
  * @property integer $user_id
  * @property integer $tip_rent
+ * @property integer $name
  */
 class StoreSettings extends CActiveRecord
 {
@@ -30,7 +31,7 @@ class StoreSettings extends CActiveRecord
 			array('user_id, tip_rent', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, user_id, tip_rent', 'safe', 'on'=>'search'),
+			array('id, user_id, tip_rent, name', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -54,6 +55,7 @@ class StoreSettings extends CActiveRecord
 			'id' => 'ID',
 			'user_id' => 'User',
 			'tip_rent' => '是否开启每日录入租金',
+            'name' => '商户名称',
 		);
 	}
 
@@ -78,6 +80,7 @@ class StoreSettings extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('user_id',$this->user_id);
 		$criteria->compare('tip_rent',$this->tip_rent);
+        $criteria->compare('name',$this->name);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -96,7 +99,7 @@ class StoreSettings extends CActiveRecord
 	}
 
     /**
-     * 保存商品设置
+     * 保存商户设置
      * @return bool
      */
     public static function saveStoreSettings()
