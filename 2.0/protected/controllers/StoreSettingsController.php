@@ -91,6 +91,10 @@ class StoreSettingsController extends Controller
 
             $record = StoreSettings::model()->findByAttributes(array('user_id' => $userId));
 
+            if(!$record->name){
+                $record->name = "";
+            }
+
             if (!$record) {
                 return F::returnError(F::lang("STORE_NO_EXIST"));
             }else{
