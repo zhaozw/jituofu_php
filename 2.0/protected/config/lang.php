@@ -188,5 +188,10 @@ return array(
     "STORE_NAME_NO_UPDATE" => "商户名称没有更新",
     "SOTRE_UPDATE_ERROR" => "商家信息更新失败",
     "SOTRE_UPDATE_SUCCESS" => "商家信息更新成功",
+
+    //软件更新
+    "SOFTWAREVERSION_PLATFORM_SPECIFY" => "缺少平台类型参数",
+    "SOFTWAREVERSION_PLATFORM_INVALID" => "平台类型参数错误",
+    "SOFTWAREVERSION_PLATFORM_NO_UPDATE" => "没有检查到更新的版本",
 );
 ?>
