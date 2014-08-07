@@ -9,30 +9,19 @@ ini_set("display_errors", "1");
 error_reporting(E_ALL);
 date_default_timezone_set('Asia/Shanghai');
 
-//Retrieve settings
-$stmt = $mysqli->prepare("SELECT id, name, value
-	FROM ".$db_table_prefix."configuration");
-$stmt->execute();
-$stmt->bind_result($id, $name, $value);
-
-while ($stmt->fetch()){
-	$settings[$name] = array('id' => $id, 'name' => $name, 'value' => $value);
-}
-$stmt->close();
-
 //Set Settings
-$emailActivation = $settings['activation']['value'];
+$emailActivation = false;
 $mail_templates_dir = "models/mail-templates/";
-$websiteName = $settings['website_name']['value'];
-$websiteUrl = $settings['website_url']['value'];
-$emailAddress = $settings['email']['value'];
-$version = $settings['version']['value'];
-$android_version = $settings['android_version']['value'];
-$android_update_log = $settings['android_update_log']['value'];
-$resend_activation_threshold = $settings['resend_activation_threshold']['value'];
+$websiteName = "记托付";
+$websiteUrl = "jituofu.com";
+$emailAddress = "service@jituofu.com";
+$version = "2.0.0";
+$android_version = "2.0.0";
+$android_update_log = "";
+$resend_activation_threshold = 3;
 $date = date("Y-m-d H:i:s");
-$language = $settings['language']['value'];
-$template = $settings['template']['value'];
+$language = "languages/en.php";
+$template = "site-templates/default.css";
 
 $master_account = -1;
 

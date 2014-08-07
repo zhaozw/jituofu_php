@@ -366,37 +366,39 @@ if($device){
             </a>
         </div>
     </div>
-    <?php if(count($imgs) > 0 && ($device === 'iPhone' || $device === 'android')): ?>
-    <div class="screenshots">
-        <div class="triggerBox flexBox">
-            <div class="triggers box" id="J-triggers">
-                <?php
-                  foreach($imgs as $k=>$img){
-                      $current = '';
-                      if($k === 0){
-                          $current = 'class="current"';
-                      }
-                      echo "<span $current></span>";
-                  }
-                ?>
-            </div>
-            <span class="currentScreenName" id="J-currentScreenName">产品展示</span>
-        </div>
-        <div id='slider' class='swipe'>
-            <div class='swipe-wrap'>
-                <?php
-                foreach($imgs as $k=>$img){
-                    $current = '';
-                    if($k === 0){
-                        $current = 'class="current"';
+    <?php if(count($imgs) > 0 && $device && ($device === 'iPhone' || $device === 'android')): ?>
+        <div class="screenshots">
+            <div class="triggerBox flexBox">
+                <div class="triggers box" id="J-triggers">
+                    <?php
+                    foreach($imgs as $k=>$img){
+                        $current = '';
+                        if($k === 0){
+                            $current = 'class="current"';
+                        }
+                        echo "<span $current></span>";
                     }
-                    echo "<div>".$img."</div>";
-                }
-                ?>
+                    ?>
+                </div>
+                <span class="currentScreenName" id="J-currentScreenName">产品展示</span>
+            </div>
+            <div id='slider' class='swipe'>
+                <div class='swipe-wrap'>
+                    <?php
+                    foreach($imgs as $k=>$img){
+                        $current = '';
+                        if($k === 0){
+                            $current = 'class="current"';
+                        }
+                        echo "<div>".$img."</div>";
+                    }
+                    ?>
+                </div>
             </div>
         </div>
-    </div>
-    <? endif; ?>
+    <?php else: ?>
+        非法访问
+    <?php endif; ?>
 </div>
 
 <div class="partners">
