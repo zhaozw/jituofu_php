@@ -1,0 +1,161 @@
+.swipe {
+    overflow: hidden;
+    visibility: hidden;
+    position: relative;
+}
+.swipe-wrap {
+    overflow: hidden;
+    position: relative;
+}
+.swipe-wrap > div {
+    float:left;
+    width:100%;
+    position: relative;
+}
+
+body{
+    background: #efebe3;
+}
+.container{
+    padding: 10px 5px;
+    width: 230px;
+    max-width: 240px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.downloadBtnBox{
+}
+.logoBox{
+    margin-right: 10px;
+    text-align: center;
+    line-height: 25px;
+}
+.version{
+    font-family: Arial, Helvetica, sans-serif;
+    color: #8d8d8d;
+    font-size: 12px;
+    margin-top: 15px;
+}
+.downloadBtnBox  a{
+    cursor: pointer;
+    margin-bottom: 10px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 15px;
+    -webkit-border-radius: 5px;
+    width: auto;
+    padding-right: 5px;
+    margin-left: 0;
+    overflow: hidden;
+    display: block;
+    width: 134px;
+}
+.downloadBtnBox  a img{
+    margin-top: 4px;
+    float: left;
+    margin-right: 10px;
+}
+.downloadBtnBox .ios{
+    background: #000;
+    color: #fff;
+}
+.downloadBtnBox .android{
+    background: #fff;
+    color: #72920B;
+}
+.downloadBtnBox .yy{
+    background: #000;
+    color: #fff;
+}
+.downloadBtnBox a:last-child{
+    margin-bottom: 0;
+}
+.logoanddownload{
+    margin-bottom: 20px;
+}
+.screenshots{
+    max-width: 200px;
+    margin: 0 auto 20px;
+}
+.triggerBox{
+    margin-bottom: 10px;
+}
+.currentScreenName{
+    font-size: 14px;
+    width: 60px;
+    float: right;
+}
+.triggers span{
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    -webkit-border-radius: 7px;
+    background: #cac7c2;
+    margin-right: 3px;
+}
+.triggers span.current{
+    background: #1c80ac;
+}
+.triggers span:last-child{
+    margin-right: 0;
+}
+.screenshots img{
+    max-width: 200px;
+}
+.swipe{
+    -webkit-box-shadow: 0 0 10px #333;
+}
+.swipe-wrap > div{
+    overflow: hidden;
+}
+#header{
+    line-height: 25px;
+    padding: 5px 0;
+    font-size: 16px;
+    text-align: center;
+    color: #333;
+    -webkit-box-shadow: 0 1px 5px #d0ccc1;
+    background: #f4f4f4;
+    border-bottom: 1px solid #d0ccc1;
+}
+.partners .content .h{
+    font-size: 15px;
+    border-bottom: 1px solid #c5c1ba;
+    margin-bottom: 10px;
+    line-height: 30px;
+}
+.partners .content ul li{
+    display: block;
+    margin: 3px 0;
+}
+.partners .content ul li a{
+    margin: 0;
+    display: block;
+    zoom: 1;
+    padding: 3px;
+    -webkit-border-radius: 5px;
+}
+.partners .content ul li a:hover{
+    background: #fff;
+}
+.partners .content ul li a:after{
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+.partners .content ul li a span{
+    line-height: 36px;
+}
+.partners .content ul li img{
+    margin-right: 10px;
+    max-width: 36px;
+    float: left;
+}
+#footer{
+    font-size: 12px;
+    text-align: center;
+    padding: 30px 0;
+    line-height: 20px;
+}
