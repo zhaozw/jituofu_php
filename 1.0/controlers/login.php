@@ -39,45 +39,29 @@ if(!empty($_POST))
 		else
 		{
 			$userdetails = fetchUserDetails($username);
-			//See if the user's account is activated
-			if($userdetails["active"]==0)
-			{
-				$errors[] = lang("ACCOUNT_INACTIVE");
-			}
-			else
-			{
-				//Hash the password and use the salt from the database to compare the password.
-				$entered_pass = generateHash($password, $userdetails["password"]);
-				
-				if($entered_pass != $userdetails["password"])
-				{
-					//Again, we know the password is at fault here, but lets not give away the combination incase of someone bruteforcing
-					$errors[] = lang("ACCOUNT_USER_OR_PASS_INVALID");
-				}
-				else
-				{
-					//Passwords match! we're good to go'
-					
-					//Construct a new logged in user object
-					//Transfer some db data to the session object
-                    $redirect = "account.html";
-                    $loggedInUser = logining($userdetails);
-                    $user_id = $loggedInUser->user_id;
+            //Hash the password and use the salt from the database to compare the password.
+            $entered_pass = generateHash($password, $userdetails["password"]);
 
-                    $where = "(user_id=$user_id)";
-                    $sql = "select p_id from `products` where ($where)";
-                    $data = $db->queryUniqueObject($sql);
-                    $db->close();
+            if($entered_pass != $userdetails["password"])
+            {
+                //Again, we know the password is at fault here, but lets not give away the combination incase of someone bruteforcing
+                $errors[] = lang("ACCOUNT_USER_OR_PASS_INVALID");
+            }
+            else
+            {
+                //Passwords match! we're good to go'
 
-                    if(!$data){
-                        $redirect = "guide.html";
-                    }
+                //Construct a new logged in user object
+                //Transfer some db data to the session object
+                $redirect = "account.html";
+                $loggedInUser = logining($userdetails);
+                $user_id = $loggedInUser->user_id;
 
-                    $result = array("bizCode" => 1, "memo" => "登录成功", "data"=>array("user"=>$loggedInUser, "redirect" => $redirect));
-                    echo json_encode($result);
-                    exit;
-				}
-			}
+                $where = "(user_id=$user_id)";
+                $result = array("bizCode" => 1, "memo" => "登录成功", "data"=>array("user"=>$loggedInUser, "redirect" => $redirect));
+                echo json_encode($result);
+                exit;
+            }
 		}
 
         if(count($errors) != 0){

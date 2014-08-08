@@ -1342,8 +1342,8 @@ function logining($userdetails){
     $loggedInUser->email = $userdetails["email"];
     $loggedInUser->user_id = $userdetails["id"];
     $loggedInUser->hash_pw = $userdetails["password"];
-    $loggedInUser->title = $userdetails["title"];
-    $loggedInUser->displayname = $userdetails["display_name"];
+    $loggedInUser->title = "";
+    $loggedInUser->displayname = "";
     $loggedInUser->username = $userdetails["user_name"];
     $loggedInUser->from = $userdetails["from"];
     $loggedInUser -> attachmentsDir = md5($loggedInUser->username);

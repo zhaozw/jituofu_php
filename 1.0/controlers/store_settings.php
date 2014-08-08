@@ -46,7 +46,7 @@ switch($client_action){
 //        }
 //        break;
     default:
-        exit(json_encode(array("bizCode" => 0, "memo" => "对不起，该功能已关闭", "data" => array())));
+        exit(json_encode(array("bizCode" => 0, "memo" => "对不起，租金提醒功能已关闭", "data" => array())));
         break;
 }
 ?>

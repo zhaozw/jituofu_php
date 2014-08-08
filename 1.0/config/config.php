@@ -14,9 +14,9 @@ date_default_timezone_set('Asia/Shanghai');
  * MySQL config
  */
 $db_host = 'localhost';
-$db_name = 'rib';
+$db_name = 'jituofu';
 $db_username = 'root';
-$db_password = 'ZHUqi@WEIli&7';
+$db_password = '';
 
 /**
  * Product config
