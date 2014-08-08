@@ -117,7 +117,7 @@ class User
 					email,
 					activation_token,
 					last_activation_request,
-					lost_password_request, 
+					lost_password_request,
 					active,
 					title,
 					sign_up_stamp,
@@ -141,7 +141,7 @@ class User
 				$stmt->execute();
 				$inserted_id = $mysqli->insert_id;
 				$stmt->close();
-				
+
 				//Insert default permission into matches table
 				$stmt = $mysqli->prepare("INSERT INTO ".$db_table_prefix."user_permission_matches  (
 					user_id,

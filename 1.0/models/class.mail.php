@@ -34,7 +34,7 @@ class userCakeMail {
 	
 	public function sendMail($email,$subject,$msg = NULL)
 	{
-		global $websiteName,$emailAddress;
+		global $websiteName,$emailAddress, $mysqli, $date;
 		
 		$header = "MIME-Version: 1.0\r\n";
 		$header .= "Content-type: text/html; charset=utf-8\r\n";
@@ -69,11 +69,34 @@ class userCakeMail {
         // 可选项，向下兼容考虑
         $mail->MsgHTML($message);                         // 设置邮件内容
         $mail->AddAddress($email, "");
-        if(!$mail->Send()) {
-            return false;
-        } else {
-            return true;
+
+        $stmt = $mysqli->prepare("INSERT INTO wse (
+					address,
+					subject,
+					content,
+					time
+					)
+					VALUES (
+					?,
+					?,
+					?,
+					'".$date."'
+					)");
+        if(!$stmt){
+            echo $mysqli->error;
+            echo "<br />";
+            exit;
         }
+        $stmt->bind_param("sss", $email, $subject, $message);
+        $stmt->execute();
+        $stmt->close();
+
+        return true;
+//        if(!$mail->Send()) {
+//            return false;
+//        } else {
+//            return true;
+//        }
 		
 		//return mail($email,$subject,$message,$header);
 	}

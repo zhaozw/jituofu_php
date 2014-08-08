@@ -203,26 +203,27 @@ function deleteUsers($users) {
 //Check if a display name exists in the DB
 function displayNameExists($displayname)
 {
-	global $mysqli,$db_table_prefix;
-	$stmt = $mysqli->prepare("SELECT active
-		FROM ".$db_table_prefix."users
-		WHERE
-		display_name = ?
-		LIMIT 1");
-	$stmt->bind_param("s", $displayname);	
-	$stmt->execute();
-	$stmt->store_result();
-	$num_returns = $stmt->num_rows;
-	$stmt->close();
-	
-	if ($num_returns > 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;	
-	}
+    return false;
+//	global $mysqli,$db_table_prefix;
+//	$stmt = $mysqli->prepare("SELECT active
+//		FROM ".$db_table_prefix."users
+//		WHERE
+//		display_name = ?
+//		LIMIT 1");
+//	$stmt->bind_param("s", $displayname);
+//	$stmt->execute();
+//	$stmt->store_result();
+//	$num_returns = $stmt->num_rows;
+//	$stmt->close();
+//
+//	if ($num_returns > 0)
+//	{
+//		return true;
+//	}
+//	else
+//	{
+//		return false;
+//	}
 }
 
 //Check if an email exists in the DB
@@ -232,8 +233,8 @@ function emailExists($email)
         return false;
     }
 	global $mysqli,$db_table_prefix;
-	$stmt = $mysqli->prepare("SELECT active
-		FROM ".$db_table_prefix."users
+	$stmt = $mysqli->prepare("SELECT id
+		FROM rib_users
 		WHERE
 		email = ?
 		LIMIT 1");
@@ -317,10 +318,6 @@ function fetchUserDetails($username=NULL,$token=NULL, $id=NULL)
 		$column = "user_name";
 		$data = $username;
 	}
-	elseif($token!=NULL) {
-		$column = "activation_token";
-		$data = $token;
-	}
 	elseif($id!=NULL) {
 		$column = "id";
 		$data = $id;
@@ -329,27 +326,19 @@ function fetchUserDetails($username=NULL,$token=NULL, $id=NULL)
 	$stmt = $mysqli->prepare("SELECT 
 		id,
 		user_name,
-		display_name,
 		password,
-		email,
-		activation_token,
-		last_activation_request,
-		lost_password_request,
-		active,
-		title,
-		f,
-		sign_up_stamp,
-		last_sign_in_stamp
-		FROM ".$db_table_prefix."users
+		email
+		FROM rib_users
 		WHERE
 		$column = ?
 		LIMIT 1");
 		$stmt->bind_param("s", $data);
-	
+
 	$stmt->execute();
-	$stmt->bind_result($id, $user, $display, $password, $email, $token, $activationRequest, $passwordRequest, $active, $title, $from, $signUp, $signIn);
+
+	$stmt->bind_result($id, $user, $password, $email);
 	while ($stmt->fetch()){
-		$row = array('id' => $id, 'user_name' => $user, 'display_name' => $display, 'password' => $password, 'email' => $email, 'activation_token' => $token, 'last_activation_request' => $activationRequest, 'lost_password_request' => $passwordRequest, 'active' => $active, 'title' => $title, 'from' => $from, 'sign_up_stamp' => $signUp, 'last_sign_in_stamp' => $signIn);
+		$row = array('id' => $id, 'user_name' => $user, 'display_name' => "", 'password' => $password, 'email' => $email, 'activation_token' => "", 'last_activation_request' => "", 'lost_password_request' => "", 'active' => 1, 'title' => "", 'from' => "", 'sign_up_stamp' => "", 'last_sign_in_stamp' => "");
 	}
 	$stmt->close();
 	return ($row);
@@ -565,8 +554,8 @@ function userIdExists($id)
 function usernameExists($username)
 {
 	global $mysqli,$db_table_prefix;
-	$stmt = $mysqli->prepare("SELECT active
-		FROM ".$db_table_prefix."users
+	$stmt = $mysqli->prepare("SELECT id
+		FROM rib_users
 		WHERE
 		user_name = ?
 		LIMIT 1");
@@ -589,41 +578,42 @@ function usernameExists($username)
 //Check if activation token exists in DB
 function validateActivationToken($token,$lostpass=NULL)
 {
-	global $mysqli,$db_table_prefix;
-	if($lostpass == NULL) 
-	{	
-		$stmt = $mysqli->prepare("SELECT active
-			FROM ".$db_table_prefix."users
-			WHERE active = 0
-			AND
-			activation_token = ?
-			LIMIT 1");
-	}
-	else 
-	{
-		$stmt = $mysqli->prepare("SELECT active
-			FROM ".$db_table_prefix."users
-			WHERE active = 1
-			AND
-			activation_token = ?
-			AND
-			lost_password_request = 1 
-			LIMIT 1");
-	}
-	$stmt->bind_param("s", $token);
-	$stmt->execute();
-	$stmt->store_result();
-		$num_returns = $stmt->num_rows;
-	$stmt->close();
-	
-	if ($num_returns > 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;	
-	}
+    return false;
+//	global $mysqli,$db_table_prefix;
+//	if($lostpass == NULL)
+//	{
+//		$stmt = $mysqli->prepare("SELECT active
+//			FROM ".$db_table_prefix."users
+//			WHERE active = 0
+//			AND
+//			activation_token = ?
+//			LIMIT 1");
+//	}
+//	else
+//	{
+//		$stmt = $mysqli->prepare("SELECT active
+//			FROM ".$db_table_prefix."users
+//			WHERE active = 1
+//			AND
+//			activation_token = ?
+//			AND
+//			lost_password_request = 1
+//			LIMIT 1");
+//	}
+//	$stmt->bind_param("s", $token);
+//	$stmt->execute();
+//	$stmt->store_result();
+//		$num_returns = $stmt->num_rows;
+//	$stmt->close();
+//
+//	if ($num_returns > 0)
+//	{
+//		return true;
+//	}
+//	else
+//	{
+//		return false;
+//	}
 }
 
 //Functions that interact mainly with .permissions table
@@ -1234,7 +1224,7 @@ function logining($userdetails){
     $loggedInUser->from = $userdetails["from"];
     $loggedInUser -> attachmentsDir = md5($loggedInUser->username);
     //Update last sign in
-    $loggedInUser->updateLastSignIn();
+    //$loggedInUser->updateLastSignIn();
     $_SESSION["userCakeUser"] = $loggedInUser;
     $time = time()+3600*24;
     setcookie("rib_user_name", $loggedInUser->username, $time, '/');

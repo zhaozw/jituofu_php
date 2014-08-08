@@ -49,10 +49,6 @@ class User
 		{
 			$this->username_taken = true;
 		}
-		else if(displayNameExists($this->displayname))
-		{
-			$this->displayname_taken = true;
-		}
 		else if(emailExists($this->clean_email))
 		{
 			$this->email_taken = true;
@@ -92,7 +88,7 @@ class User
 				$hooks = array(
 					"searchStrs" => array("#ACTIVATION-MESSAGE","#ACTIVATION-KEY","#USERNAME#"),
 					"subjectStrs" => array($activation_message,$this->activation_token,$this->displayname)
-					);
+				);
 				
 				/* Build the template - Optional, you can just use the sendMail function 
 				Instead to pass a message. */
@@ -124,21 +120,11 @@ class User
 			if(!$this->mail_failure)
 			{
 				//Insert the user into the database providing no errors have been found.
-				$stmt = $mysqli->prepare("INSERT INTO ".$db_table_prefix."users (
+				$stmt = $mysqli->prepare("INSERT INTO rib_users (
 					user_name,
-					display_name,
 					password,
 					email,
-					activation_token,
-					last_activation_request,
-					lost_password_request, 
-					active,
-					title,
-					f,
-					position,
-					ua,
-					sign_up_stamp,
-					last_sign_in_stamp,
+					location,
 					registered_date
 					)
 					VALUES (
@@ -146,38 +132,14 @@ class User
 					?,
 					?,
 					?,
-					?,
-					'".time()."',
-					'0',
-					?,
-					'New Member',
-					?,
-					?,
-					?,
-					'".time()."',
-					'0',
-					'$this->registered_date'
+					'".$this->registered_date."'
 					)");
                 if(!$stmt){
                     echo $mysqli->error;
                     echo "<br />";
                     exit;
                 }
-				$stmt->bind_param("sssssisss", $this->username, $this->displayname, $secure_pass, $this->clean_email, $this->activation_token, $this->user_active,$this->from, $this->position, $this->ua);
-				$stmt->execute();
-				$inserted_id = $mysqli->insert_id;
-				$stmt->close();
-
-				//Insert default permission into matches table
-				$stmt = $mysqli->prepare("INSERT INTO ".$db_table_prefix."user_permission_matches  (
-					user_id,
-					permission_id
-					)
-					VALUES (
-					?,
-					'1'
-					)");
-				$stmt->bind_param("s", $inserted_id);
+				$stmt->bind_param("ssss", $this->username, $secure_pass, $this->clean_email, $this->position);
 				$stmt->execute();
 				$stmt->close();
 			}

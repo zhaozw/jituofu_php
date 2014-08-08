@@ -20,8 +20,8 @@ if(!empty($_POST))
 	$password = trim($_POST["password"]);
 	$confirm_pass = trim($_POST["passwordc"]);
 	$captcha = md5($_POST["captcha"]);
-	
-	
+
+
 	if ($captcha != $_SESSION['captcha'])
 	{
 		$errors[] = lang("CAPTCHA_FAIL");

@@ -525,7 +525,7 @@ function usernameExists($username)
 {
 	global $mysqli,$db_table_prefix;
 	$stmt = $mysqli->prepare("SELECT active
-		FROM ".$db_table_prefix."users
+		FROM rib_users
 		WHERE
 		user_name = ?
 		LIMIT 1");

@@ -21,14 +21,14 @@ class loggedInUser {
 			id = ?");
 		$stmt->bind_param("ii", $time, $this->user_id);
 		$stmt->execute();
-		$stmt->close();	
+		$stmt->close();
 	}
 	
 	//Return the timestamp when the user registered
 	public function signupTimeStamp()
 	{
 		global $mysqli,$db_table_prefix;
-		
+
 		$stmt = $mysqli->prepare("SELECT sign_up_stamp
 			FROM ".$db_table_prefix."users
 			WHERE id = ?");
