@@ -43,41 +43,33 @@ if ($client_action === "find") {
         } else {
             //Check if the user has any outstanding lost password requests
             $userdetails = fetchUserDetails($username);
-            if ($userdetails["lost_password_request"] == 1) {
-                $errors[] = lang("FORGOTPASS_REQUEST_EXISTS");
-                $result = array("bizCode" => 2, "memo" => "", "data" => array("msg" => $errors));
-                echo json_encode($result);
-                exit;
+            //Email the user asking to confirm this change password request
+            //We can use the template builder here
+
+            //We use the activation token again for the url key it gets regenerated everytime it's used.
+
+            $mail = new userCakeMail();
+            $checkcode = generate6Random();
+
+            //保存检验码
+            saveCheckCode($userdetails['id'], $checkcode);
+
+            //Setup our custom hooks
+            $hooks = array(
+                "searchStrs" => array("#WEBSITENAME#", "#ACTIVATIONCODE#", "#USERNAME#"),
+                "subjectStrs" => array($websiteName, $checkcode, $userdetails["user_name"])
+            );
+
+            if (!$mail->newTemplateMsg("lost-password-request-client.txt", $hooks)) {
+                $errors[] = lang("MAIL_TEMPLATE_BUILD_ERROR");
             } else {
-                //Email the user asking to confirm this change password request
-                //We can use the template builder here
-
-                //We use the activation token again for the url key it gets regenerated everytime it's used.
-
-                $mail = new userCakeMail();
-
-                //Setup our custom hooks
-                $hooks = array(
-                    "searchStrs" => array("#WEBSITENAME#", "#ACTIVATIONCODE#", "#USERNAME#"),
-                    "subjectStrs" => array($websiteName, $userdetails["activation_token"], $userdetails["user_name"])
-                );
-
-                if (!$mail->newTemplateMsg("lost-password-request-client.txt", $hooks)) {
-                    $errors[] = lang("MAIL_TEMPLATE_BUILD_ERROR");
+                if (!$mail->sendMail($userdetails["email"], "找回密码")) {
+                    $errors[] = lang("MAIL_ERROR", array($websiteName));
                 } else {
-                    if (!$mail->sendMail($userdetails["email"], "找回密码")) {
-                        $errors[] = lang("MAIL_ERROR", array($websiteName));
-                    } else {
-                        //Update the DB to show this account has an outstanding request
-                        if (!flagLostPasswordRequest($userdetails["user_name"], 1)) {
-                            $errors[] = lang("SQL_ERROR");
-                        } else {
-                            $msg = lang("FORGOTPASS_REQUEST_SUCCESS");
-                            $result = array("bizCode" => 1, "memo" => "", "data" => array("msg" => array($msg)));
-                            echo json_encode($result);
-                            exit;
-                        }
-                    }
+                    $msg = lang("FORGOTPASS_REQUEST_SUCCESS");
+                    $result = array("bizCode" => 1, "memo" => "", "data" => array("msg" => array($msg)));
+                    echo json_encode($result);
+                    exit;
                 }
             }
         }
@@ -98,38 +90,42 @@ if ($client_action === "reset") {
     $password = trim($_POST["password"]);
     $confirm_pass = trim($_POST["passwordc"]);
 
-    if ($token == "" || !validateActivationToken($token, TRUE)) {
+    if ($token == "") {
+        $errors[] = lang("FORGOTPASS_INVALID_TOKEN");
+    }else if(!getUidByCheckCode($token)){
         $errors[] = lang("FORGOTPASS_INVALID_TOKEN");
     } else {
-        if (minMaxRange(6, 50, $password) && minMaxRange(6, 50, $confirm_pass)) {
-            $errors[] = lang("ACCOUNT_PASS_CHAR_LIMIT", array(6, 50));
-        } else if ($password != $confirm_pass) {
-            $errors[] = lang("ACCOUNT_PASS_MISMATCH");
-        }
+        $uid = getUidByCheckCode($token);
+        if(!$uid){
+            $errors[] = lang("FORGOTPASS_INVALID_TOKEN");
+        }else{
+            if (minMaxRange(6, 50, $password) && minMaxRange(6, 50, $confirm_pass)) {
+                $errors[] = lang("ACCOUNT_PASS_CHAR_LIMIT", array(6, 50));
+            } else if ($password != $confirm_pass) {
+                $errors[] = lang("ACCOUNT_PASS_MISMATCH");
+            }
 
-        $userdetails = fetchUserDetails(NULL, $token); //Fetchs user details
-        $mail = new userCakeMail();
+            $userdetails = fetchUserDetails(NULL, $uid); //Fetchs user details
+            $mail = new userCakeMail();
 
-        //Setup our custom hooks
-        $hooks = array(
-            "searchStrs" => array("#WEBSITENAME#", "#USERNAME#"),
-            "subjectStrs" => array($websiteName, $userdetails["user_name"])
-        );
+            //Setup our custom hooks
+            $hooks = array(
+                "searchStrs" => array("#WEBSITENAME#", "#USERNAME#"),
+                "subjectStrs" => array($websiteName, $userdetails["user_name"])
+            );
 
-        if (!$mail->newTemplateMsg("your-lost-password-client.txt", $hooks)) {
-            $errors[] = lang("MAIL_TEMPLATE_BUILD_ERROR");
-        } else {
-            $secure_pass = generateHash($password);
-
-            if (!$mail->sendMail($userdetails["email"], "修改密码")) {
-                $errors[] = lang("MAIL_ERROR", array($websiteName));
+            if (!$mail->newTemplateMsg("your-lost-password-client.txt", $hooks)) {
+                $errors[] = lang("MAIL_TEMPLATE_BUILD_ERROR");
             } else {
-                if (!updatePasswordFromToken($secure_pass, $token)) {
-                    $errors[] = lang("SQL_ERROR");
+                $secure_pass = generateHash($password);
+
+                if (!$mail->sendMail($userdetails["email"], "修改密码")) {
+                    $errors[] = lang("MAIL_ERROR", array($websiteName));
                 } else {
-                    if (!flagLostPasswordRequest($userdetails["user_name"], 0)) {
+                    if (!updatePasswordFromToken($secure_pass, $uid)) {
                         $errors[] = lang("SQL_ERROR");
                     } else {
+                        deleteCheckCode($uid);
                         $msg = lang("FORGOTPASS_NEW_PASS_EMAIL_CLIENT");
                         $result = array("bizCode" => 1, "memo" => "", "data" => array("msg" => array($msg)));
                         echo json_encode($result);

@@ -258,8 +258,8 @@ function emailExists($email)
 function emailUsernameLinked($email,$username)
 {
 	global $mysqli,$db_table_prefix;
-	$stmt = $mysqli->prepare("SELECT active
-		FROM ".$db_table_prefix."users
+	$stmt = $mysqli->prepare("SELECT id
+		FROM rib_users
 		WHERE user_name = ?
 		AND
 		email = ?
@@ -310,7 +310,7 @@ function fetchAllUsers()
 }
 
 //Retrieve complete user information by username, token or ID
-function fetchUserDetails($username=NULL,$token=NULL, $id=NULL)
+function fetchUserDetails($username=NULL, $id=NULL)
 {
     $row = null;
 
@@ -392,6 +392,131 @@ function flagLostPasswordRequest($username,$value)
 	$result = $stmt->execute();
 	$stmt->close();
 	return $result;
+}
+
+/**
+ * 随机生成6位随机码
+ * @return string
+ */
+function generate6Random()
+{
+    $order_id = uniqid(rand(10, 1000), false);
+    $order_id = substr($order_id, rand(0, strlen($order_id) - 6), 6);
+    return strtolower($order_id);
+}
+
+/**
+ * 获取检验码
+ * @param $uid
+ */
+function getCheckCode($uid){
+    global $mysqli;
+    $stmt = $mysqli->prepare("SELECT
+		check_code
+		FROM check_code
+		WHERE
+		user_id = ?
+		LIMIT 1");
+    $stmt->bind_param("s", $uid);
+    $stmt->execute();
+
+    $result = null;
+    $stmt->bind_result($check_code);
+    while ($stmt->fetch()){
+        $result = $check_code;
+    }
+
+    $stmt->close();
+
+    return $result;
+}
+
+/**
+ * 删除检验码
+ * @param $uid
+ */
+function deleteCheckCode($uid){
+    global $mysqli;
+    $stmt = $mysqli->prepare("DELETE
+		FROM check_code
+		WHERE
+		user_id = ?
+		LIMIT 1");
+    $stmt->bind_param("s", $uid);
+    $result = $stmt->execute();
+    $stmt->close();
+
+    return $result;
+}
+
+/**
+ * 根据检验码获取uid
+ * @param $uid
+ */
+function getUidByCheckCode($code){
+    global $mysqli;
+    $stmt = $mysqli->prepare("SELECT
+		user_id
+		FROM check_code
+		WHERE
+		check_code = ?
+		LIMIT 1");
+    $stmt->bind_param("s", $code);
+    $stmt->execute();
+
+    $result = null;
+    $stmt->bind_result($uid);
+    while ($stmt->fetch()){
+        $result = $uid;
+    }
+
+    $stmt->close();
+
+    return $result;
+}
+
+/**
+ * 保存检验码
+ * @param $uid
+ * @param $checkcode
+ */
+function saveCheckCode($uid, $checkcode){
+    global $mysqli;
+    $stmt = $mysqli->prepare("SELECT
+		id
+		FROM check_code
+		WHERE
+		user_id = ?
+		LIMIT 1");
+    $stmt->bind_param("s", $uid);
+    $result = $stmt->execute();
+    $stmt->close();
+
+    //如果前面有检验码
+    if($result){
+        $stmt = $mysqli->prepare("DELETE
+		FROM check_code
+		WHERE
+		user_id = ?
+		LIMIT 1");
+        $stmt->bind_param("s", $uid);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    $stmt = $mysqli->prepare("INSERT INTO check_code (
+            user_id,
+            check_code,
+            time
+            )
+            VALUES (
+            ?,
+            ?,
+            '".time()."'
+            )");
+    $stmt->bind_param("ss", $uid, $checkcode);
+    $result = $stmt->execute();
+    $stmt->close();
 }
 
 //Check if a user is logged in
@@ -495,16 +620,15 @@ function updateLastActivationRequest($new_activation_token,$username,$email)
 }
 
 //Generate a random password, and new token
-function updatePasswordFromToken($pass,$token)
+function updatePasswordFromToken($pass,$uid)
 {
 	global $mysqli,$db_table_prefix;
 	$new_activation_token = generateActivationToken();
-	$stmt = $mysqli->prepare("UPDATE ".$db_table_prefix."users
-		SET password = ?,
-		activation_token = ?
+	$stmt = $mysqli->prepare("UPDATE rib_users
+		SET password = ?
 		WHERE
-		activation_token = ?");
-	$stmt->bind_param("sss", $pass, $new_activation_token, $token);
+		id = ?");
+	$stmt->bind_param("ss", $pass, $uid);
 	$result = $stmt->execute();
 	$stmt->close();	
 	return $result;
