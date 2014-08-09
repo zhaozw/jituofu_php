@@ -46,7 +46,7 @@ switch($action){
             echo json_encode($result);
             exit;
         }
-        $sql = "insert into types(`user_id`, `name`) values($user_id, '$name')";
+        $sql = "insert into types(`user_id`, `name`, `time`) values($user_id, '$name', '$date')";
         $data = $db->query($sql);
         if($data){
             $result = array("bizCode" => 1, "memo" => "添加成功", "data"=>array("id" => $db->lastInsertedId()));
