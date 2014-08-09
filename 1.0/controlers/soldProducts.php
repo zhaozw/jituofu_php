@@ -26,12 +26,12 @@ if($client_action === "query"){
     $where = "((user_id=$user_id) and (date like '{$date}%'";
     $where .= '))';
 
-    $query_sold_sql = "select p_id,detail,count,date,order_id,prop from `cashier` where $where ORDER BY date DESC";
+    $query_sold_sql = "select pid,selling_count,date,id,selling_price from `cashier` where $where ORDER BY date DESC";
     $sold_data = $db->queryManyObject($query_sold_sql);
 
     $ids = array();
     foreach($sold_data as $k => $v){
-        array_push($ids, $v->p_id);
+        array_push($ids, $v->pid);
     }
     $ids = array_unique($ids);
 
@@ -40,7 +40,7 @@ if($client_action === "query"){
         if($k !== 0){
             $where .= ' or ';
         }
-        $where .= "p_id='$v'";
+        $where .= "id='$v'";
     }
     $where .= '))';
 
@@ -48,14 +48,14 @@ if($client_action === "query"){
         $where = "(user_id=$user_id)";
     }
 
-    $query_price_sql = "select p_price,p_id,p_type,p_pic,p_name from `products` where $where ORDER BY p_date DESC";
+    $query_price_sql = "select price,id,type,pic,name from `products` where $where ORDER BY date DESC";
     $query_price_data = $db->queryManyObject($query_price_sql);
     $operation = array();
     $types = array();
     foreach($sold_data as $kk => $vv){
         foreach($query_price_data as $k => $v){
-            if($vv-> p_id == $v -> p_id){
-                $t = $v -> p_type;
+            if($vv-> pid == $v -> id){
+                $t = $v -> type;
                 $query_type_name_sql = "select name from types where (id=$t)";
                 $type = $db->queryObject($query_type_name_sql);
 
@@ -63,9 +63,11 @@ if($client_action === "query"){
                     $type = new stdClass();
                     $type -> name = "未知分类";
                 }
+                $selling_count = $vv -> selling_count;
+                $selling_price = $vv -> selling_price;
                 array_push(
                     $operation,
-                    array('p_id' => $v-> p_id, 'detail' => $vv -> detail, 'p_price' => $v->p_price,'date'=>$vv->date, 'type'=>$type->name, 'order_id'=>$vv->order_id, 'prop'=>$vv->prop, 'p_pic'=>$v->p_pic,'p_name'=>$v->p_name)
+                    array('p_id' => $v-> id, 'detail' => "$selling_price*$selling_count|", 'p_price' => $v->price,'date'=>$vv->date, 'type'=>$type->name, 'order_id'=>$vv->id, 'prop'=>"", 'p_pic'=>$v->pic,'p_name'=>$v->name)
                 );
             }
         }
