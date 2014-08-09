@@ -1346,7 +1346,7 @@ function logining($userdetails){
     $loggedInUser->displayname = "";
     $loggedInUser->username = $userdetails["user_name"];
     $loggedInUser->from = $userdetails["from"];
-    $loggedInUser -> attachmentsDir = md5($loggedInUser->username);
+    $loggedInUser -> attachmentsDir = $loggedInUser->user_id;
     //Update last sign in
     //$loggedInUser->updateLastSignIn();
     $_SESSION["userCakeUser"] = $loggedInUser;

@@ -28,10 +28,23 @@ function queryProductById($id){
     if(!$id){
         return false;
     }
-    $sql = "select * from `products` where (p_id=$id and user_id=$user_id and (p_status=1 or p_status is null))";
+    $sql = "select * from `products` where (id=$id and user_id=$user_id and (status=1))";
     $data = $db -> queryUniqueObject($sql);
 
-    return $data;
+    $result = array();
+    $result['p_id'] = $data->id;
+    $result['user_id'] = $data->user_id;
+    $result['p_name'] = $data->name;
+    $result['p_count'] = $data->count;
+    $result['p_price'] = $data->price;
+    $result['p_from'] = $data->from;
+    $result['p_man'] = $data->man;
+    $result['p_pic'] = $data->pic;
+    $result['p_props'] = "";
+    $result['p_date'] = $data->date;
+    $result['p_type'] = $data->type;
+
+    return $result;
 };
 
 if($client_action === "query"){
@@ -43,10 +56,10 @@ if($client_action === "query"){
     $limit = @$_POST['limit'];
     $type = @$_POST['type'];
     $countIs0 = @$_POST['countIs0'];
-    $count_condition = 'p_count>0';
+    $count_condition = 'count>0';
     $name = @$_POST['name'];
     if($countIs0){
-        $count_condition = 'p_count<=0';
+        $count_condition = 'count<=0';
     }
     if(!$limit){
         $limit = 10;
@@ -54,21 +67,37 @@ if($client_action === "query"){
     $limit_end = (int)$limit;
     $limit_start = (int)$limit*((int)$page_num-1);
 
-    $sql = "select p_id,p_name,p_count,p_price,p_pic,p_props from `products` where ($count_condition and user_id=$user_id and (p_status=1 or p_status is null)) ORDER BY p_date DESC limit $limit_start,$limit_end";
+    $sql = "select id,name,count,price,pic from `products` where ($count_condition and user_id=$user_id and (status=1 or status is null)) ORDER BY date DESC limit $limit_start,$limit_end";
     if($name){
-        $sql = "select p_id,p_name,p_count,p_price,p_pic,p_props from `products` where ($count_condition and user_id=$user_id and (p_name like '%$name%') and (p_status=1 or p_status is null)) ORDER BY p_date DESC limit $limit_start,$limit_end";
+        $sql = "select id,name,count,price,pic from `products` where ($count_condition and user_id=$user_id and (name like '%$name%') and (status=1)) ORDER BY date DESC limit $limit_start,$limit_end";
     }
     if($type){
-        $sql = "select p_id,p_name,p_count,p_price,p_pic,p_props from `products` where (p_type=$type and $count_condition and user_id=$user_id and (p_status=1 or p_status is null)) ORDER BY p_date DESC ".
+        $sql = "select id,name,count,price,pic from `products` where (type=$type and $count_condition and user_id=$user_id and (status=1)) ORDER BY date DESC ".
             "limit $limit_start,$limit_end";
         if($name){
-            $sql = "select p_id,p_name,p_count,p_price,p_pic,p_props from `products` where (p_type=$type and $count_condition and user_id=$user_id and (p_name like '%$name%') and (p_status=1 or p_status is null)) ORDER BY p_date DESC ".
+            $sql = "select id,name,count,price,pic from `products` where (type=$type and $count_condition and user_id=$user_id and (name like '%$name%') and (status=1)) ORDER BY date DESC ".
                 "limit $limit_start,$limit_end";
         }
     }
 
     $data = $db->queryManyObject($sql);
-    $data = array('products' => $data);
+    $results = array();
+    foreach($data as $k=>$v){
+        $result = array();
+        $result['p_id'] = $v->id;
+        $result['user_id'] = $v->user_id;
+        $result['p_name'] = $v->name;
+        $result['p_count'] = $v->count;
+        $result['p_price'] = $v->price;
+        $result['p_from'] = $v->from;
+        $result['p_man'] = $v->man;
+        $result['p_pic'] = $v->pic;
+        $result['p_props'] = "";
+        $result['p_date'] = $v->date;
+        $result['p_type'] = $v->type;
+        array_push($results, $result);
+    }
+    $data = array('products' => $results);
     $db->close();
 
     $result = array("bizCode" => 1, "memo" => "", "data" => $data);
@@ -105,12 +134,12 @@ if($client_action==="update"){
         echo json_encode($result);
     }else{
         $date = date("Y-m-d H:i:s");
-        $name = $data -> p_name;
-        $price = $data -> p_price;
-        $exist_count = $data -> p_count;
-        $type = $data -> p_type;
-        $man = $data -> p_man;
-        $from = $data -> p_from;
+        $name = $data['p_name'];
+        $price = $data['p_price'];
+        $exist_count = $data['p_count'];
+        $type = $data['p_type'];
+        $man = $data['p_man'];
+        $from = $data['p_from'];
         $count = $exist_count;
         $id = $_POST['id'];
 
@@ -133,8 +162,8 @@ if($client_action==="update"){
             $from = $_POST['from'];
         }
 
-        $update_sql = "update `products` set `p_name`='$name',`p_price`='$price',`p_count`='$count',`p_from`='$from',".
-            "`p_type`='$type',`p_man`='$man',`p_date`='$date' where (`user_id`=$user_id and `p_id`='$id')";
+        $update_sql = "update `products` set `name`='$name',`price`='$price',`count`='$count',`from`='$from',".
+            "`type`='$type',`man`='$man',`date`='$date' where (`user_id`=$user_id and `id`='$id')";
         $result = $db->query($update_sql);
 
         if($result){
@@ -186,15 +215,15 @@ if($client_action === "add"){
         $props = "";
     }
 
-    $query_isExist_sql = "select p_name from products where (p_name='$name' and user_id=$user_id and p_type='$type')";
+    $query_isExist_sql = "select name from products where (name='$name' and user_id=$user_id and type='$type')";
     $query_isExist = $db->queryUniqueObject($query_isExist_sql);
     if($query_isExist){
         echo json_encode(array("bizCode" => 0, "memo" => "商品名称重复", "data" => array()));
         exit;
     }
-    $sql = "insert into products(`user_id`, `p_name`, `p_count`, `p_from`, `p_man`, `p_price`, `p_pic`, `p_props`, `p_date`, ".
-        "`p_type`, `p_status`) values ($user_id, '$name', '$count', '$from', '$man', '$price', '$attachment', '$props', '$date', ".
-        "'$type', 1)";
+    $sql = "insert into products(`user_id`, `name`, `count`, `from`, `man`, `price`, `pic`, `date`, ".
+        "`type`) values ($user_id, '$name', '$count', '$from', '$man', '$price', '$attachment', '$date', ".
+        "'$type')";
     $writed_product = $db->query($sql);
     if($writed_product){
         echo json_encode(array("bizCode" => 1, "memo" => "录入成功", "data" => array()));
@@ -215,7 +244,8 @@ if($client_action === "delete"){
         $db->close();
         echo json_encode($result);
     }else{
-        $delete_sql = "update `products` set `p_status`=0 where (p_id=$data->p_id and user_id=$user_id)";
+        $id = $data['p_id'];
+        $delete_sql = "update `products` set `status`=0 where (id=$id and user_id=$user_id)";
         $delete_result = $db -> query($delete_sql);
         $db->close();
         if($delete_result){

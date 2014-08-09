@@ -27,7 +27,7 @@ if($client_action === "query"){
     $count = @$_POST['count'];
     $name = @$_POST['name'];
     if($count){
-        $count_condition = "(p_count <= $count)";
+        $count_condition = "(count <= $count)";
     }
     if(!$limit){
         $limit = 10;
@@ -37,24 +37,42 @@ if($client_action === "query"){
     }
     $limit_end = (int)$limit;
     $limit_start = (int)$limit*((int)$page_num-1);
-    $where = "((p_status=1 or p_status is null) and user_id=$user_id)";
+    $where = "((status=1) and user_id=$user_id)";
     if(isset($count_condition)){
         $where .= ' and '.$count_condition;
     }
 
     if($name){
-        $where .= " and (p_name like '%$name%')";
+        $where .= " and (name like '%$name%')";
 
     }
     if($type){
-        $where .= " and (p_type=$type)";
+        $where .= " and (type=$type)";
     }
-    $sql = "select * from `products` where ($where) ORDER BY p_date DESC limit $limit_start,$limit_end";
+    $sql = "select * from `products` where ($where) ORDER BY date DESC limit $limit_start,$limit_end";
     $data = $db->queryManyObject($sql);
     $db->close();
 
     if(isset($_POST['ajax'])){
-        $data = array('products' => $data);
+        $results = array();
+        foreach($data as $k=>$v){
+            $result = array();
+            $result['p_id'] = $v->id;
+            $result['user_id'] = $v->user_id;
+            $result['p_name'] = $v->name;
+            $result['p_count'] = $v->count;
+            $result['p_price'] = $v->price;
+            $result['p_from'] = $v->from;
+            $result['p_man'] = $v->man;
+            $result['p_pic'] = $v->pic;
+            $result['p_props'] = "";
+            $result['p_date'] = $v->date;
+            $result['p_type'] = $v->type;
+            array_push($results, $result);
+        }
+        $data = array('products' => $results);
+
+        $data = array('products' => $results);
         echo json_encode(array("bizCode"=>1, "memo"=>"", "data"=>$data));
         exit;
     }else{
@@ -64,12 +82,24 @@ if($client_action === "query"){
 }
 if($client_action === "isThere"){
     $where = "(user_id=$user_id)";
-    $sql = "select p_id from `products` where ($where)";
+    $sql = "select id from `products` where ($where)";
     $data = $db->queryUniqueObject($sql);
     $db->close();
 
     if($data){
-        echo json_encode(array("bizCode"=>1, "memo"=>"", "data"=>$data));
+        $result = array();
+        $result['p_id'] = $data->id;
+        $result['user_id'] = $data->user_id;
+        $result['p_name'] = $data->name;
+        $result['p_count'] = $data->count;
+        $result['p_price'] = $data->price;
+        $result['p_from'] = $data->from;
+        $result['p_man'] = $data->man;
+        $result['p_pic'] = $data->id;
+        $result['p_props'] = "";
+        $result['p_date'] = $data->date;
+        $result['p_type'] = $data->type;
+        echo json_encode(array("bizCode"=>1, "memo"=>"", "data"=>$result));
         exit;
     }else{
         echo json_encode(array("bizCode"=>0, "memo"=>"仓库里没有商品", "data"=>array()));
