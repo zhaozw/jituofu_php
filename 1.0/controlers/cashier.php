@@ -43,7 +43,7 @@ if($client_action === "selling"){
         exit;
     }
 
-    $query_kc_sql = "select p_count from `products` where (`user_id`=$user_id and `p_id` = '$id')";
+    $query_kc_sql = "select count,price from `products` where (`user_id`=$user_id and `id` = '$id' and `status`=1)";
     $kc_data = $db->queryObject($query_kc_sql);
     if(!$kc_data){
         echo json_encode(array("bizCode"=>0, "memo" => "该商品不存", "data" => array()));
@@ -54,17 +54,27 @@ if($client_action === "selling"){
 //    exit;
 //}
 
-    $sql = "insert into cashier(`user_id`, `p_id`, `count`, `prop`, `detail`, `man`, `date`) values($user_id, '$id', $count, '$props', '$detail', '$man', '$date')";
+    $price = $kc_data->price;//成本价
+    $selling_price = 0;//销售单价
+    $details_split = preg_split("/\|/", $detail);//将销售详情格式化数组
+    $prices = array();//销售详情中的所有销售单价
+    foreach($details_split as $k => $v){
+        $detail_split = preg_split("/\*/", $v);
+        array_push($prices, $detail_split[0]);
+    }
+    $selling_price = min($prices);//使用最小的销售单价
+
+    $sql = "insert into cashier(`user_id`, `pid`, `selling_count`,`selling_price`, `who`, `date`, `price`) values($user_id, '$id', $count, $selling_price , '$man', '$date', '$price')";
     $insert_to_cashier_result = $db->query($sql);
 
 
-    $new_count = $kc_data-> p_count - $count;
+    $new_count = $kc_data-> count - $count;
 //if($new_count <= 0){
 //    $new_count = 0;
 //}
 
     if($insert_to_cashier_result){
-        $update_kc_sql = "update `products` set `p_count` = $new_count where (`user_id`=$user_id and `p_id` = '$id')";
+        $update_kc_sql = "update `products` set `count` = $new_count where (`user_id`=$user_id and `id` = '$id' and `status`=1)";
         $updated_kc_result = $db->query($update_kc_sql);
     }else{
         echo json_encode(array("bizCode"=>0, "memo" => "记账失败，请重试", "data" => array()));

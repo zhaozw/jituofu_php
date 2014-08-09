@@ -85,16 +85,11 @@ if($client_action === "query"){
     foreach($data as $k=>$v){
         $result = array();
         $result['p_id'] = $v->id;
-        $result['user_id'] = $v->user_id;
         $result['p_name'] = $v->name;
         $result['p_count'] = $v->count;
         $result['p_price'] = $v->price;
-        $result['p_from'] = $v->from;
-        $result['p_man'] = $v->man;
+        $result['p_from'] = "";
         $result['p_pic'] = $v->pic;
-        $result['p_props'] = "";
-        $result['p_date'] = $v->date;
-        $result['p_type'] = $v->type;
         array_push($results, $result);
     }
     $data = array('products' => $results);
