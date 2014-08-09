@@ -89,16 +89,6 @@ if($client_action === "isThere"){
     if($data){
         $result = array();
         $result['p_id'] = $data->id;
-        $result['user_id'] = $data->user_id;
-        $result['p_name'] = $data->name;
-        $result['p_count'] = $data->count;
-        $result['p_price'] = $data->price;
-        $result['p_from'] = $data->from;
-        $result['p_man'] = $data->man;
-        $result['p_pic'] = $data->id;
-        $result['p_props'] = "";
-        $result['p_date'] = $data->date;
-        $result['p_type'] = $data->type;
         echo json_encode(array("bizCode"=>1, "memo"=>"", "data"=>$result));
         exit;
     }else{
