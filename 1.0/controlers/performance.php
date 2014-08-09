@@ -40,18 +40,18 @@ switch($client_action){
         $where .= "(user_id=?) and (date >= ? and date <= ?)";
         $where .= ')';
 
-        $stmt = $mysqli->prepare("select p_id,detail,count,date,order_id,prop from `cashier` where $where");
+        $stmt = $mysqli->prepare("select pid,selling_count,date,id, selling_price from `cashier` where $where");
         $stmt->bind_param("iss", $user_id, $start, $end);
         $stmt->execute();
-        $stmt->bind_result($p_id, $detail, $count, $date, $order_id, $prop);
+        $stmt->bind_result($p_id, $count, $date, $order_id, $selling_price);
         while ($stmt->fetch()){
             $object = new stdClass();
             $object->p_id = $p_id;
-            $object->detail = $detail;
+            $object->detail = "$selling_price*$count|";
             $object->count = $count;
             $object->date = $date;
             $object->order_id = $order_id;
-            $object->prop = $prop;
+            $object->prop = "";
             array_push($sold_data, $object);
         }
         $stmt->close();
@@ -67,7 +67,7 @@ switch($client_action){
             if($k !== 0){
                 $where .= ' or ';
             }
-            $where .= "p_id='$v'";
+            $where .= "id='$v'";
         }
         $where .= '))';
 
@@ -80,7 +80,7 @@ switch($client_action){
             echo json_encode($result);
             exit;
         }
-        $query_p_detail_sql = "select p_price,p_id,p_type,p_name from `products` where $where ";
+        $query_p_detail_sql = "select price,id,type,name from `products` where $where ";
         $query_p_detail_data = array();
         $stmt = $mysqli->prepare($query_p_detail_sql);
         $stmt->execute();
