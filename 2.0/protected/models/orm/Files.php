@@ -212,6 +212,10 @@ class Files extends CActiveRecord
         $record = Files::model()->findByPk($picId);
 
         if(!$record){
+            //可能是老版本系统的附件
+            if($picId){
+                return Yii::app()->params['oldFileHost']."/".$picId;
+            }
             return "";
         }else{
             $dir = $record->getAttribute('dir');
