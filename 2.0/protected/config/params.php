@@ -1,6 +1,6 @@
 <?php
-$fileHost = ENVIRONMENT === 'development' ? "http://192.168.1.101/uploadfiles" : "http://115.29.39.106:1111/uploadfiles";
-$oldFileHost = ENVIRONMENT === 'development' ? "http://192.168.1.101/uploadfiles" : "http://115.29.39.106";
+$fileHost = defined('ENVIRONMENT') && ENVIRONMENT === 'development' ? "http://192.168.1.101/uploadfiles" : "http://115.29.39.106:1111/uploadfiles";
+$oldFileHost = defined('ENVIRONMENT') && ENVIRONMENT === 'development' ? "http://192.168.1.101/uploadfiles" : "http://115.29.39.106";
 
 return array(
 		//地域文件

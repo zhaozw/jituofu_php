@@ -25,9 +25,15 @@ class MailCommand  extends CConsoleCommand
 
         $records = Wse::getAllRecords();
 
+        $sended_counter = 0;
         foreach($records as $k => $record){
+            if($sended_counter >= 10){
+                break;
+            }
+
             $id = $record->getAttribute('id');
             if($id){
+                $sended_counter++;
                 $mail->Subject = $record->getAttribute('subject');
                 $mail->AltBody = "为了查看该邮件，请切换到支持 HTML 的邮件客户端";
                 $mail->MsgHTML($record->getAttribute('content'));
