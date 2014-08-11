@@ -25,5 +25,5 @@ return array(
         'fileType' => array('png', 'jpeg', 'jpg'),
         'defaultImgPlaceholder' => "http://baidu.com",//默认占位图片
         'fileHost' => "http://192.168.1.102/uploadfiles",//附件主机名
-        'oldFileHost' => "http://192.168.1.101/attachments"//2.0版本升级前的附件主机名
+        'oldFileHost' => "http://192.168.1.101/"//2.0版本升级前的附件主机名
 );

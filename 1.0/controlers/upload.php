@@ -54,7 +54,7 @@ if ($pic["error"] > 0) {
     exit;
 }
 
-$username_dir = $user_id;
+$username_dir = md5($loggedInUser->username);
 $user_attachments_dir = $attachments_dir . "/$username_dir";
 if (!is_dir($user_attachments_dir)) {
     mkdir($user_attachments_dir);
