@@ -6,6 +6,7 @@
 define('appPath', dirname(__FILE__).DIRECTORY_SEPARATOR.'application'.DIRECTORY_SEPARATOR);
 
 $confType = 'dev';
+//$confType = 'pro';
 
 return CMap::mergeArray( require(dirname(__FILE__).'/'.$confType.'Config.php'), array(
     'name'=>'记托付',

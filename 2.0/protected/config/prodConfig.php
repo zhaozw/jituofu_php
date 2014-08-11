@@ -19,7 +19,7 @@ return CMap::mergeArray( require(dirname(__FILE__).'/base.php'), array(
             'connectionString' => 'mysql:host=127.0.0.1;dbname=jituofu',
             'emulatePrepare' => true,
             'username' => 'root',
-            'password' => 'ZHUqi@159',
+            'password' => 'ZHUqi@WEIli&7',
             'charset' => 'utf8',
             'tablePrefix' => '',
 		),
@@ -32,7 +32,7 @@ return CMap::mergeArray( require(dirname(__FILE__).'/base.php'), array(
                     'levels'=>'error, warning',
                     'filter'=>'CLogFilter',
                     'categories'=> 'application.*',
-                    'logPath' => '/htdocs/xdjzb/protected/runtime/logs',
+                    'logPath' => '/www/jituofu/2.0/protected/runtime/logs',
                     'logFile' => 'application.log'
                 ),
                 //发送邮件日志
@@ -41,7 +41,7 @@ return CMap::mergeArray( require(dirname(__FILE__).'/base.php'), array(
                     'levels'=>'warning, error',
                     'filter'=>'CLogFilter',
                     'categories'=> 'mail.*',
-                    'logPath' => '/htdocs/xdjzb/protected/runtime/logs',
+                    'logPath' => '/www/jituofu/2.0/protected/runtime/logs',
                     'logFile' => 'mail.log'
                 ),
                 // show log in firebugs

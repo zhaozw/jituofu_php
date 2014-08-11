@@ -10,14 +10,8 @@ defined('SYS_ROOT_DIR') || define('SYS_ROOT_DIR',__DIR__);
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 
 // 定义 运行环境 正式环境用：production
-if ( $_SERVER['SERVER_NAME'] == 'jizhangbao.com.cn:80' )
-{
-	define('ENVIRONMENT', 'production');
-}
-else
-{
-	define('ENVIRONMENT', 'development');
-}
+//define('ENVIRONMENT', 'production');
+define('ENVIRONMENT', 'development');
 
 //BUG
 defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);

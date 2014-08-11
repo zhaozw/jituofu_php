@@ -1,4 +1,7 @@
 <?php
+$fileHost = ENVIRONMENT === 'development' ? "http://192.168.1.101/uploadfiles" : "http://115.29.39.106:1111/uploadfiles";
+$oldFileHost = ENVIRONMENT === 'development' ? "http://192.168.1.101/uploadfiles" : "http://115.29.39.106";
+
 return array(
 		//地域文件
 		'area_code' => $_SERVER['DOCUMENT_ROOT']."/area_code.dat",
@@ -18,12 +21,12 @@ return array(
         'lang' => require_once 'lang.php',
         'mail' => require_once 'mailConfig.php',
         'mailTemplatesDir' => 'mail-templates/',
-        'appUrl' => "http://192.168.1.100",
+        'appUrl' => "http://jituofu.com",
         'checkCodeInvalidTime' => 300,//验证码过期时间(秒)
-        'localKey' => "JTF_ANDROID",
+        'localKey' => "JITUOFU.COM",
         'maxFileSize' => 1000*1000*10,//文件最大为10mb
         'fileType' => array('png', 'jpeg', 'jpg'),
         'defaultImgPlaceholder' => "http://baidu.com",//默认占位图片
-        'fileHost' => "http://192.168.1.102/uploadfiles",//附件主机名
-        'oldFileHost' => "http://192.168.1.101/"//2.0版本升级前的附件主机名
+        'fileHost' => $fileHost,//附件主机名
+        'oldFileHost' => $oldFileHost//2.0版本升级前的附件主机名
 );
