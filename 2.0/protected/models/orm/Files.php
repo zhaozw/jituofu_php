@@ -191,8 +191,22 @@ class Files extends CActiveRecord
      * @param $picId
      * @return string
      */
+    public static $getImgUser;
     public static function getImg($picId){
+        global $getImgUser;
         $public = F::getPublicData();
+
+        //老系统的商品图片
+        if(!is_int($picId)){
+            if(!stristr($picId, "attachments")){
+                $userId = $public['userId'];
+                $record = $getImgUser ? $getImgUser : Users::model()->findByAttributes(array('id'=>$userId));
+                $username = $record->getAttribute("user_name");
+
+                $picId = "attachments/".md5($username)."/".$picId;
+            }
+            return Yii::app()->params['oldFileHost']."/".$picId;
+        }
 
         $type = 'h';
         switch($public['display']){
@@ -212,10 +226,6 @@ class Files extends CActiveRecord
         $record = Files::model()->findByPk($picId);
 
         if(!$record){
-            //可能是老版本系统的附件
-            if($picId){
-                return Yii::app()->params['oldFileHost']."/".$picId;
-            }
             return "";
         }else{
             $dir = $record->getAttribute('dir');
