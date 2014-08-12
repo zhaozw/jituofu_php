@@ -145,7 +145,22 @@ class SalesReportController extends Controller
                     "count" => $count,
                 );
                 if(ReturnSale::add($return_sale_model)){
-                    F::returnSuccess(F::lang('RETURNSALE_SUCCESS'), array("newSaleCount" => $new_count));
+                    //更新库存
+                    $product_record = Products::isExistById($record->getAttribute("pid"));
+                    if($product_record){
+                        $product_count = $record->getAttribute('count');
+                        $newCount = $count + $product_count;
+
+                        if($product_record->updateByPk($record->getAttribute("pid"), array('count' => $newCount)) > 0){
+                            F::returnSuccess(F::lang('RETURNSALE_SUCCESS'), array("newSaleCount" => $new_count));
+                        }else{
+                            $pid = $record->getAttribute("pid");
+                            F::error("更新商品 $pid 的库存失败"+CJSON::encode($product_record->getErrors()));
+                            F::returnError(F::lang('RETURNSALE_ERROR'));
+                        }
+                    }else{
+                        F::returnSuccess(F::lang('RETURNSALE_SUCCESS'), array("newSaleCount" => $new_count));
+                    }
                 }else{
                     F::returnError(F::lang('RETURNSALE_ERROR'));
                 }
