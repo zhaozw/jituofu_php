@@ -28,7 +28,7 @@ class UsersController extends Controller
 	{
 		return array(
 			array('allow',
-				'actions'=>array('create', 'login', 'forgot', 'forgot2'),
+				'actions'=>array('create', 'login', 'forgot', 'forgot2', 'updateLSID'),
 				'users'=>array('*'),
                 'verbs' => array('post', 'get')
 			),
@@ -130,6 +130,18 @@ class UsersController extends Controller
         }
     }
 
+    public function actionUpdateLSID(){
+        if(F::loggedCommonVerify()){
+            $public = F::getPublicData();
+            $userId = F::trimAll($public['userId']);
+
+            if(Users::updateLSID($userId)){
+                F::returnSuccess(F::lang('COMMON_CZ_SUCCESS'));
+            }else{
+                F::returnError(F::lang("COMMON_CZ_ERROR"));
+            }
+        }
+    }
     public function actionLogin(){
         if(F::notLoggedCommonVerify()){
             $operation = F::getOperationData();

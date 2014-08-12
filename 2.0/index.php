@@ -7,7 +7,7 @@ date_default_timezone_set('Asia/Shanghai');
 //项目根目录绝对路径
 defined('SYS_ROOT_DIR') || define('SYS_ROOT_DIR',__DIR__);
 //BUG
-#defined('YII_DEBUG') or define('YII_DEBUG', true);
+defined('YII_DEBUG') or define('YII_DEBUG', true);
 
 // 定义 运行环境 正式环境用：production
 //define('ENVIRONMENT', 'production');

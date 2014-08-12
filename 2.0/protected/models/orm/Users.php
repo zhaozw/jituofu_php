@@ -235,4 +235,30 @@ class Users extends CActiveRecord
             }
         }
     }
+
+    /**
+     * 更新用户最后登录日期
+     * @param $userId
+     * @return boolean
+     */
+    public static function updateLSID($userId){
+        $record = Users::model()->findByAttributes(array('id' => $userId));
+
+        if($record){
+            $criteria = new CDbCriteria;
+            $criteria->condition = "id = $userId";
+            $rows = Users::model()->updateAll(
+                array('last_sign_in_date' => F::getCurrentDatetime()),
+                $criteria
+            );
+
+            if($rows < 1){
+                return false;
+            }else{
+                return true;
+            }
+        }else{
+            return false;
+        }
+    }
 }
