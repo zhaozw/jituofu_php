@@ -212,34 +212,35 @@ class SalesReportController extends Controller
             $cashier_criteria->addCondition("date <= '$this->end'");
 
             $cashier_result = Cashier::model()->findAll($cashier_criteria);
-            $cashier_count = count($cashier_result);
-            $cashier_pages = new CPagination($cashier_count);
-            $cashier_pages->setPageSize($this->limit);
-            $cashier_pages->setCurrentPage($this->pageNum);
-            $cashier_pages->applyLimit($cashier_criteria);
-
-            $cashier_dataProvider = new CArrayDataProvider(
-                $cashier_result,
-                array(
-                    'sort' => $this->csort,
-                    'pagination' => $cashier_pages
-                )
-            );
-
-            $cashier_lastPage = $cashier_count / $this->limit;
-            if (is_float($cashier_lastPage)) {
-                $cashier_lastPage = $cashier_lastPage + 1;
-            }
+//            $cashier_count = count($cashier_result);
+//            $cashier_pages = new CPagination($cashier_count);
+//            $cashier_pages->setPageSize($this->limit);
+//            $cashier_pages->setCurrentPage($this->pageNum);
+//            $cashier_pages->applyLimit($cashier_criteria);
+//
+//            $cashier_dataProvider = new CArrayDataProvider(
+//                $cashier_result,
+//                array(
+//                    'sort' => $this->csort,
+//                    'pagination' => $cashier_pages
+//                )
+//            );
+//
+//            $cashier_lastPage = $cashier_count / $this->limit;
+//            if (is_float($cashier_lastPage)) {
+//                $cashier_lastPage = $cashier_lastPage + 1;
+//            }
 
             //获取合并记账成本列表
             $mergecashier_cost_results = $this->getMergeCashierCosts(false);
 
-            if (($this->pageNum + 1) > $cashier_lastPage) {
+            //if (($this->pageNum + 1) > $cashier_lastPage) {
+            if(count($cashier_result) <= 0){
                 F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("costs" => $mergecashier_cost_results));
                 return;
             }
 
-            foreach ($cashier_dataProvider->getData() as $k => $v) {
+            foreach ($cashier_result as $k => $v) {
                 $result = array("date" => $v->date, "cost" => "", "id" => $v->id);
 
                 $selling_count = $v->selling_count;
@@ -349,26 +350,27 @@ class SalesReportController extends Controller
         $mergecashier_criteria->addCondition("date <= '$this->end'");
 
         $mergecashier_result = MergeCashier::model()->findAll($mergecashier_criteria);
-        $mergecashier_count = count($mergecashier_result);
-        $mergecashier_pages = new CPagination($mergecashier_count);
-        $mergecashier_pages->setPageSize($this->limit);
-        $mergecashier_pages->setCurrentPage($this->pageNum);
-        $mergecashier_pages->applyLimit($mergecashier_criteria);
-
-        $mergecashier_dataProvider = new CArrayDataProvider(
-            $mergecashier_result,
-            array(
-                'sort' => $this->csort,
-                'pagination' => $mergecashier_pages
-            )
-        );
-
-        $mergecashier_lastPage = $mergecashier_count / $this->limit;
-        if (is_float($mergecashier_lastPage)) {
-            $mergecashier_lastPage = $mergecashier_lastPage + 1;
-        }
-        if (($this->pageNum + 1) <= $mergecashier_lastPage) {
-            foreach ($mergecashier_dataProvider->getData() as $k => $v) {
+//        $mergecashier_count = count($mergecashier_result);
+//        $mergecashier_pages = new CPagination($mergecashier_count);
+//        $mergecashier_pages->setPageSize($this->limit);
+//        $mergecashier_pages->setCurrentPage($this->pageNum);
+//        $mergecashier_pages->applyLimit($mergecashier_criteria);
+//
+//        $mergecashier_dataProvider = new CArrayDataProvider(
+//            $mergecashier_result,
+//            array(
+//                'sort' => $this->csort,
+//                'pagination' => $mergecashier_pages
+//            )
+//        );
+//
+//        $mergecashier_lastPage = $mergecashier_count / $this->limit;
+//        if (is_float($mergecashier_lastPage)) {
+//            $mergecashier_lastPage = $mergecashier_lastPage + 1;
+//        }
+        //if (($this->pageNum + 1) <= $mergecashier_lastPage) {
+        if(count($mergecashier_result) > 0){
+            foreach ($mergecashier_result as $k => $v) {
                 $result = array("date" => $v->date, "cost" => "", "id" => $v->id);
                 $cashier_record = Cashier::model()->findAllByAttributes(array('merge_id' => $v->id, 'user_id' => $this->uid));
 
@@ -406,34 +408,35 @@ class SalesReportController extends Controller
             $cashier_criteria->addCondition("date <= '$this->end'");
 
             $cashier_result = Cashier::model()->findAll($cashier_criteria);
-            $cashier_count = count($cashier_result);
-            $cashier_pages = new CPagination($cashier_count);
-            $cashier_pages->setPageSize($this->limit);
-            $cashier_pages->setCurrentPage($this->pageNum);
-            $cashier_pages->applyLimit($cashier_criteria);
-
-            $cashier_dataProvider = new CArrayDataProvider(
-                $cashier_result,
-                array(
-                    'sort' => $this->csort,
-                    'pagination' => $cashier_pages
-                )
-            );
-
-            $cashier_lastPage = $cashier_count / $this->limit;
-            if (is_float($cashier_lastPage)) {
-                $cashier_lastPage = $cashier_lastPage + 1;
-            }
+//            $cashier_count = count($cashier_result);
+//            $cashier_pages = new CPagination($cashier_count);
+//            $cashier_pages->setPageSize($this->limit);
+//            $cashier_pages->setCurrentPage($this->pageNum);
+//            $cashier_pages->applyLimit($cashier_criteria);
+//
+//            $cashier_dataProvider = new CArrayDataProvider(
+//                $cashier_result,
+//                array(
+//                    'sort' => $this->csort,
+//                    'pagination' => $cashier_pages
+//                )
+//            );
+//
+//            $cashier_lastPage = $cashier_count / $this->limit;
+//            if (is_float($cashier_lastPage)) {
+//                $cashier_lastPage = $cashier_lastPage + 1;
+//            }
 
             //获取合并记账利润列表
             $mergecashier_profit_results = $this->getMergeCashierProfits(false);
 
-            if (($this->pageNum + 1) > $cashier_lastPage) {
+            //if (($this->pageNum + 1) > $cashier_lastPage) {
+            if (count($cashier_result) <= 0) {
                 F::returnSuccess(F::lang('COMMON_QUERY_SUCCESS'), array("profits" => $mergecashier_profit_results));
                 return;
             }
 
-            foreach ($cashier_dataProvider->getData() as $k => $v) {
+            foreach ($cashier_result as $k => $v) {
                 $result = array("date" => $v->date, "profit" => "", "id" => $v->id);
 
                 $selling_count = $v->selling_count;
@@ -543,26 +546,27 @@ class SalesReportController extends Controller
         $mergecashier_criteria->addCondition("date <= '$this->end'");
 
         $mergecashier_result = MergeCashier::model()->findAll($mergecashier_criteria);
-        $mergecashier_count = count($mergecashier_result);
-        $mergecashier_pages = new CPagination($mergecashier_count);
-        $mergecashier_pages->setPageSize($this->limit);
-        $mergecashier_pages->setCurrentPage($this->pageNum);
-        $mergecashier_pages->applyLimit($mergecashier_criteria);
-
-        $mergecashier_dataProvider = new CArrayDataProvider(
-            $mergecashier_result,
-            array(
-                'sort' => $this->csort,
-                'pagination' => $mergecashier_pages
-            )
-        );
-
-        $mergecashier_lastPage = $mergecashier_count / $this->limit;
-        if (is_float($mergecashier_lastPage)) {
-            $mergecashier_lastPage = $mergecashier_lastPage + 1;
-        }
-        if (($this->pageNum + 1) <= $mergecashier_lastPage) {
-            foreach ($mergecashier_dataProvider->getData() as $k => $v) {
+//        $mergecashier_count = count($mergecashier_result);
+//        $mergecashier_pages = new CPagination($mergecashier_count);
+//        $mergecashier_pages->setPageSize($this->limit);
+//        $mergecashier_pages->setCurrentPage($this->pageNum);
+//        $mergecashier_pages->applyLimit($mergecashier_criteria);
+//
+//        $mergecashier_dataProvider = new CArrayDataProvider(
+//            $mergecashier_result,
+//            array(
+//                'sort' => $this->csort,
+//                'pagination' => $mergecashier_pages
+//            )
+//        );
+//
+//        $mergecashier_lastPage = $mergecashier_count / $this->limit;
+//        if (is_float($mergecashier_lastPage)) {
+//            $mergecashier_lastPage = $mergecashier_lastPage + 1;
+//        }
+        //if (($this->pageNum + 1) <= $mergecashier_lastPage) {
+        if (count($mergecashier_result) > 0) {
+            foreach ($mergecashier_result as $k => $v) {
                 $result = array("date" => $v->date, "profit" => "", "id" => $v->id);
                 $cashier_record = Cashier::model()->findAllByAttributes(array('merge_id' => $v->id, 'user_id' => $this->uid));
 

@@ -121,5 +121,35 @@ if($type == 'detail'){
     }
     echo json_encode(array("total"=>$total, "update_counter" => $update_counter));
     exit;
+}else if($type === 'cost'){
+    $sql = "select pid,id from cashier where (price=0)";
+    $records = $db->queryManyObject($sql);
+
+    $total = 0;
+    $cashier_pids = array();
+    $update_counter = 0;
+    foreach ($records as $k => $record) {
+        $total++;
+        array_push($cashier_pids, array("pid" => $record->pid, "id" => $record->id));
+    }
+
+
+    foreach ($cashier_pids as $k => $v) {
+        if ($update_counter >= 200) {
+            break;
+        }
+        $pid = $v['pid'];
+        $cashier_id = $v['id'];
+        $sql = "select price from products where (id=$pid)";
+        $record = $db->queryObject($sql);
+        $price = $record ? $record->price : 0;
+
+        $sql = "update `cashier` set `price` = $price where `id` = $cashier_id";
+        if ($db->query($sql)) {
+            $update_counter++;
+        }
+    }
+    echo json_encode(array("total"=>$total, "update_counter" => $update_counter));
+    exit;
 }
 ?>

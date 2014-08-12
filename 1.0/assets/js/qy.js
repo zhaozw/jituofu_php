@@ -23,6 +23,12 @@ define(function (require, exports, module) {
         io();
     });
 
+    $('#Jq-cost').bind("click", function (e){
+        e.preventDefault();
+        type = "cost";
+        io();
+    });
+
    function io(){
        $('#J-tip').html("处理中...");
        $('#J-result').html("");

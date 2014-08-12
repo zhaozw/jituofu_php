@@ -27,6 +27,7 @@
 <body style="padding: 10px;">
   <p id="J-tip"></p>
   <a href="javascript:void(0)" id="Jq-detail">迁移销售记录中的detail</a><br />
+  <a href="javascript:void(0)" id="Jq-cost">迁移商品成本</a><br />
   <a href="javascript:void(0)" id="Jq-ds">迁移user中的小店设置数据</a>
   <div id="J-result"></div>
 </body>
