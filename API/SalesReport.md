@@ -9,7 +9,7 @@
 
 ####按开始和结束时间搜索
 
-接口:`salesreport/index`或`salesreport/`
+接口:`salesReport/index`或`salesreport/`
 ######入参
 <table>
     <tr>
@@ -103,7 +103,7 @@
 
 ####根据开始和结束时间获取利润列表
 
-接口:`salesreport/index`或`salesreport/`
+接口:`salesReport/index`或`salesreport/`
 ######入参
 <table>
     <tr>
@@ -208,7 +208,7 @@
 
 ####根据开始和结束时间获取成本列表
 
-接口:`salesreport/index`或`salesreport/`
+接口:`salesReport/index`或`salesreport/`
 ######入参
 <table>
     <tr>
@@ -312,7 +312,7 @@
 
 ####根据开始和结束时间获取商品列表
 
-接口:`salesreport/index`或`salesreport/`
+接口:`salesReport/index`或`salesreport/`
 ######入参
 <table>
     <tr>
@@ -614,7 +614,7 @@
 
 ####退货
 
-接口:`salesreport/returnsale`
+接口:`salesReport/returnsale`
 ######入参
 <table>
     <tr>
@@ -689,7 +689,7 @@
 
 ####获取商品分类销售概况
 
-接口:`salesreport/index`或`salesreport/`
+接口:`salesReport/index`或`salesreport/`
 ######入参
 <table>
     <tr>

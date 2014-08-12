@@ -3,7 +3,7 @@
 * [获取更新](#获取更新)
 
 ####获取更新
-接口:`softwareversion/get`
+接口:`softwareVersion/get`
 
 ######入参
 <table>

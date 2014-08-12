@@ -8,6 +8,7 @@ User模块
 * [登录密码修改](#登录密码修改)
 * [忘记密码](#忘记密码)
 * [忘记密码/重新设置密码](#重新设置密码)
+* [更新用户最后登录时间](#更新用户最后登录时间)
 
 ####注册
 接口:`users/create`
@@ -751,3 +752,48 @@ public中的userId必须传入
         <td></td>
     </tr>
 </table>
+
+####更新用户最后登录时间
+接口:`users/updatelsid`
+
+public中的userId必须传入
+
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>date</td>
+        <td>datetime</td>
+        <td>yyyy-MM-dd h:m:s</td>
+        <td></td>
+        <td>NO</td>
+        <td>这个参数实际上不需要的，但为了应付一期接口的设计，必须要传入。后期接口整改时，要剔除该参数</td>
+    </tr>
+</table>
+######出参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>参见公共参数</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+

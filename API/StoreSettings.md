@@ -4,7 +4,7 @@
 * [获取商户基本信息](#获取商户基本信息)
 
 ####更新商家名称
-接口:`storesettings/update`
+接口:`storeSettings/update`
 
 public中的userId必须传入
 ######入参
@@ -47,7 +47,7 @@ public中的userId必须传入
 </table>
 
 ####获取商户基本信息
-接口:`storesettings/get`
+接口:`storeSettings/get`
 ######入参
 <table>
     <tr>
