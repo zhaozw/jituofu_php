@@ -66,7 +66,7 @@ return array(
     "MEMO_USERINFO_UPDATE_ERROR" => "更新用户信息失败",
     "MEMO_SIGN_INVALID" => "签名验证失败",
     "MEMO_USER_VERIFY_ERROR" => "用户验证失败",
-    "MEMO_NO_LOGIN" => "当前用户未登录",
+    "MEMO_NO_LOGIN" => "您需要重新登录",
     "MEMO_NO_DIR" => "目录为空",
 
     //商品分类

@@ -937,7 +937,7 @@ class SalesReportController extends Controller
      */
     public function actionIndex()
     {
-        if (F::loggedCommonVerify()) {
+        if (F::loggedCommonVerify(true)) {
             $public = F::getPublicData();
             $operation = F::getOperationData();
 
