@@ -196,8 +196,12 @@ class Files extends CActiveRecord
         global $getImgUser;
         $public = F::getPublicData();
 
+        if(!$picId){
+            return "";
+        }
+
         //老系统的商品图片
-        if(!is_int($picId)){
+        if(!preg_match("/^\d*$/", $picId)){
             if(!stristr($picId, "attachments")){
                 $userId = $public['userId'];
                 $record = $getImgUser ? $getImgUser : Users::model()->findByAttributes(array('id'=>$userId));
@@ -218,10 +222,6 @@ class Files extends CActiveRecord
                 break;
         }
         $baseUrl = Yii::app()->params['fileHost'];
-
-        if(!$picId){
-            return "";
-        }
 
         $record = Files::model()->findByPk($picId);
 
