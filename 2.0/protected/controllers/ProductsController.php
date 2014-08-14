@@ -82,6 +82,7 @@ class ProductsController extends Controller
             $criteria->addCondition('user_id=' . $userId);
             $criteria->addCondition('status=1');
             $criteria->addCondition("name like :name");
+            $criteria->addCondition("type != 0");//过滤在记账时手动添加的商品
             $criteria->params = array(":name"=>"%".$keyword."%");
 
             $count = Products::model()->count($criteria);
