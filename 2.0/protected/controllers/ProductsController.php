@@ -85,6 +85,7 @@ class ProductsController extends Controller
             $criteria->params = array(":name"=>"%".$keyword."%");
 
             $count = Products::model()->count($criteria);
+            $result = Products::model()->findAll($criteria);
 
             $pages = new CPagination($count);
             $pages->setPageSize($limit);
@@ -107,7 +108,6 @@ class ProductsController extends Controller
                 $csort->defaultOrder = 'price ASC';
             }
 
-            $result = Products::model()->findAll($criteria);
             $dataProvider = new CArrayDataProvider(
                 $result,
                 array(
