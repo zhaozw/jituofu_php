@@ -64,3 +64,4 @@ var requestData = {
 * [反馈](Feedback.md)
 * [商家信息](StoreSettings.md)
 * [软件更新](SoftwareVersion.md)
+* [公告](Notice.md)

@@ -193,5 +193,8 @@ return array(
     "SOFTWAREVERSION_PLATFORM_SPECIFY" => "缺少平台类型参数",
     "SOFTWAREVERSION_PLATFORM_INVALID" => "平台类型参数错误",
     "SOFTWAREVERSION_PLATFORM_NO_UPDATE" => "没有检查到更新的版本",
+
+    //公告
+    "NOTICE_VERSION_SPECIFY" => "请指定客户端版本参数",
 );
 ?>

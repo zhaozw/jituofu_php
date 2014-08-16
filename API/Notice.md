@@ -1,0 +1,69 @@
+公告模块
+========
+* [获取最新公告](#获取最新公告)
+
+####获取更新
+接口:`notice/`或`notice/index`
+
+######入参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+        <td>version</td>
+        <td>String</td>
+        <td>当前客户端版本号</td>
+        <td>1.0.0 or 2.3.4 ........</td>
+        <td>No</td>
+        <td></td>
+    </tr>
+</table>
+######出参
+<table>
+    <tr>
+        <td>参数名称</td>
+        <td>数据类型</td>
+        <td>描述</td>
+        <td>取值</td>
+        <td>参数值是否可空</td>
+        <td>其它</td>
+    </tr>
+    <tr>
+            <td>title</td>
+            <td>String</td>
+            <td></td>
+            <td></td>
+            <td>Yes</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>content</td>
+            <td>Html String</td>
+            <td></td>
+            <td></td>
+            <td>Yes</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>position</td>
+            <td>String</td>
+            <td></td>
+            <td></td>
+            <td>Yes</td>
+            <td>1为全局公告，在所有页面顶端显示；0为普通公告，只在用户首页显示</td>
+        </tr>
+        <tr>
+            <td>date</td>
+            <td>String</td>
+            <td></td>
+            <td>yyyy-MM-dd h:m:s</td>
+            <td>Yes</td>
+            <td></td>
+        </tr>
+</table>
